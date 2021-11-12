@@ -1,3 +1,5 @@
+[![Build Status](https://app.travis-ci.com/mysto/clang-fpe.svg?branch=master)](https://app.travis-ci.com/mysto/clang-fpe)
+
 # FPE - Format Preserving Encryption Implementation in C
 
 An implementation of the NIST approved FF1, FF3 and FF3-1 Format Preserving Encryption (FPE) algorithms in Python.
@@ -35,7 +37,7 @@ There are official [test vectors](http://csrc.nist.gov/groups/ST/toolkit/example
 with a known test vector:
 
 ```shell
-python test.py
+make test
 ```
 ## Example Usage
 

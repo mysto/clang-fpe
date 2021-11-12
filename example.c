@@ -57,7 +57,6 @@ int main(int argc, char *argv[])
         radix = atoi(argv[3]);
     unsigned int x[100],
                  y[xlen];
-    unsigned int tmp;
 
     hex2chars(argv[1], k);
     hex2chars(argv[2], t);

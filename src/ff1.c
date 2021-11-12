@@ -358,14 +358,12 @@ void FPE_unset_ff1_key(FPE_KEY *key)
     OPENSSL_free(key->tweak);
 }
 
-void FPE_ff1_encrypt(unsigned int *in, unsigned int *out, unsigned int inlen, FPE_KEY *key, const int enc)
+void FPE_ff1_encrypt(unsigned int *in, unsigned int *out, unsigned int inlen, FPE_KEY *key)
 {
-    if (enc)
-        FF1_encrypt(in, out, &key->aes_enc_ctx, key->tweak,
-                    key->radix, inlen, key->tweaklen);
-
-    else
-        FF1_decrypt(in, out, &key->aes_enc_ctx, key->tweak,
-                    key->radix, inlen, key->tweaklen);
+    FF1_encrypt(in, out, &key->aes_enc_ctx, key->tweak, key->radix, inlen, key->tweaklen);
 }
 
+void FPE_ff1_decrypt(unsigned int *in, unsigned int *out, unsigned int inlen, FPE_KEY *key)
+{
+    FF1_decrypt(in, out, &key->aes_enc_ctx, key->tweak, key->radix, inlen, key->tweaklen);
+}

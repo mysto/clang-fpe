@@ -1,35 +1,49 @@
 # FPE - Format Preserving Encryption Implementation in C
 
-An implementation of the NIST approved Format Preserving Encryption (FPE) FF1 and FF3 algorithms in C.
+An implementation of the NIST approved FF1, FF3 and FF3-1 Format Preserving Encryption (FPE) algorithms in Python.
 
-[NIST Recommendation SP 800-38G](http://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-38G.pdf)
+This package implements the FPE algorithm for Format Preserving Encryption as described in the March 2016 NIST publication 800-38G _Methods for Format-Preserving Encryption_,
+and revised on February 28th, 2019 with a draft update for FF3-1.
 
-This follows the FF1 and FF3 schemes for Format Preserving Encryption outlined in the NIST Recommendation, released in March 2016. For FF1, it builds on and formalizes (differing from but remaining mathematically equivalent to) the FFX-A10 scheme by Bellare, Rogaway and Spies as defined [here](http://csrc.nist.gov/groups/ST/toolkit/BCM/documents/proposedmodes/ffx/ffx-spec.pdf) and [here](http://csrc.nist.gov/groups/ST/toolkit/BCM/documents/proposedmodes/ffx/ffx-spec2.pdf). For FF3, it formalizes the BPS scheme.
+* [NIST Recommendation SP 800-38G (FF3)](http://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-38G.pdf)
+* [NIST Recommendation SP 800-38G Revision 1 (FF3-1)](https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-38Gr1-draft.pdf)
 
-A note about FF3: There was some [recent cryptanalysis](https://beta.csrc.nist.gov/News/2017/Recent-Cryptanalysis-of-FF3) about the FF3 algorithm that is important to review. NIST has concluded that FF3 is no longer suitable as a general-purpose FPE method.
+## Build and Run
 
-A note about FF2: FF2 was originally NOT recommended by NIST, but it is under review again as DFF. You can read about it [here](http://csrc.nist.gov/groups/ST/toolkit/BCM/documents/proposedmodes/dff/dff-ff2-fpe-scheme-update.pdf).
-
-## Build
-
-To compile the example.c with the fpe library, just run *make example* or *make*.
+To compile the example.c with the fpe library, just run `make`.
 
 **Run [test.py](https://github.com/0NG/Format-Preserving-Encryption/blob/master/test.py) for testing with official test vectors.**
 
-On MacOS:
+To build on MacOS:
 ```shell
 brew install openssl
-CFLAGS="-I$(brew --prefix openssl)/include"
-LDFLAGS="-L$(brew --prefix openssl)/lib"
+export CFLAGS="-I$(brew --prefix openssl)/include"
+export LDFLAGS="-L$(brew --prefix openssl)/lib"
 ```
+Run the example in
+[example.c](https://github.com/0NG/Format-Preserving-Encryption/blob/master/example.c). 
 
+```shell
+./example EF4359D8D580AA4F7F036D6F04FC6A94 D8E7920AFA330A73 10 890121234567890000
+
+FF1 ciphertext: 318181603547192051
+FF3 ciphertext: 750918814058654607
+```
+Run the tests
+
+There are official [test vectors](http://csrc.nist.gov/groups/ST/toolkit/examples.html) for both FF1 and FF3 provided by NIST. You can run [test.py](https://github.com/0NG/Format-Preserving-Encryption/blob/master/test.py) with python 3.x.
+with a known test vector:
+
+```shell
+python test.py
+```
 ## Example Usage
 
 This implementation is based on openssl's BIGNUM and AES, so you need to install openssl first.
 
 There are several functions for FF1 and FF3 algorithm, respectively.
 
-1. Set and unset ff1 key and tweak
+1. Set and unset FF1 key and tweak
 
 ```c++
 int FPE_set_ff1_key(const unsigned char *userKey, const int bits, const unsigned char *tweak, const unsigned int tweaklen, const int radix, FPE_KEY *key);
@@ -46,10 +60,10 @@ void FPE_unset_ff1_key(FPE_KEY *key);
 | radix    | number of characters in the given alphabet, it must be in [2, 2^16] |
 | key      | FPE_KEY structure                        |
 
-2. encrypt or decrypt text using ff1 algorithm
+2. encrypt or decrypt text using FF1 algorithm
 
 ```c++
-void FPE_ff1_encrypt(unsigned int *in, unsigned int *out, unsigned int inlen, FPE_KEY *key, const int enc)
+void FPE_ff1_encrypt(unsigned int *in, unsigned int *out, unsigned int inlen, FPE_KEY *key)
 ```
 
 | name  | description                              |
@@ -58,9 +72,8 @@ void FPE_ff1_encrypt(unsigned int *in, unsigned int *out, unsigned int inlen, FP
 | out   | encrypted numeral string, represented as an array of integers |
 | inlen | the length of input numeral string (in)  |
 | key   | FPE_KEY structure that have been set with key and tweak |
-| enc   | can be two value: FPE_ENCRYPT for encrypt and FPE_DECRYPT for decrypt |
 
-3. Set and unset ff3 key and tweak
+3. Set and unset FF3 key and tweak
 
 ```c++
 int FPE_set_ff3_key(const unsigned char *userKey, const int bits, const unsigned char *tweak, const unsigned int radix, FPE_KEY *key);
@@ -76,10 +89,10 @@ void FPE_unset_ff3_key(FPE_KEY *key);
 | radix   | number of characters in the given alphabet, it must be in [2, 2^16] |
 | key     | FPE_KEY structure                        |
 
-4. encrypt or decrypt text using ff3 algorithm
+4. encrypt or decrypt text using FF3 algorithm
 
 ```c++
-void FPE_ff3_encrypt(unsigned int *in, unsigned int *out, unsigned int inlen, FPE_KEY *key, const int enc);
+void FPE_ff3_encrypt(unsigned int *in, unsigned int *out, unsigned int inlen, FPE_KEY *key);
 ```
 
 | name  | description                              |
@@ -88,12 +101,7 @@ void FPE_ff3_encrypt(unsigned int *in, unsigned int *out, unsigned int inlen, FP
 | out   | encrypted numeral string, represented as an array of integers |
 | inlen | the length of input numeral string (in)  |
 | key   | FPE_KEY structure that have been set with key and tweak |
-| enc   | can be two value: FPE_ENCRYPT for encrypt and FPE_DECRYPT for decrypt |
-
-The example code is [example.c](https://github.com/0NG/Format-Preserving-Encryption/blob/master/example.c). Also, there are some official [test vectors](http://csrc.nist.gov/groups/ST/toolkit/examples.html) for both FF1 and FF3 provided by NIST. You can run [test.py](https://github.com/0NG/Format-Preserving-Encryption/blob/master/test.py) with python 3.x.
-
 
 ## TODO
 
-1. Make the API simpler
-2. More effective implementation
+1. More effective implementation

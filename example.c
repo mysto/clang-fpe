@@ -4,10 +4,10 @@
 #include <string.h>
 #include <fpe.h>
 
-void hex2chars(unsigned char hex[], unsigned char result[])
+void hex2chars(char hex[], unsigned char result[])
 {
     int len = strlen(hex);
-    unsigned char temp[3];
+    char temp[3];
     temp[2] = 0x00;
 
     int j = 0;
@@ -19,7 +19,7 @@ void hex2chars(unsigned char hex[], unsigned char result[])
     }
 }
 
-void map_chars(unsigned char str[], unsigned int result[])
+void map_chars(char str[], unsigned int result[])
 {
     int len = strlen(str);
 
@@ -81,39 +81,24 @@ int main(int argc, char *argv[])
     for (int i = 0; i < xlen; ++i)    printf(" %d", x[i]);
     printf("\n\n");
 
-    printf("========== FF1 ==========\n");
-    FPE_ff1_encrypt(x, y, xlen, &ff1, FPE_ENCRYPT);
-
-    printf("ciphertext(numeral string):");
-    for (int i = 0; i < xlen; ++i)    printf(" %d", y[i]);
-    printf("\n");
-
-    inverse_map_chars(y, result, xlen);
-    printf("ciphertext: %s\n\n", result);
-
-    memset(x, 0, sizeof(x));
-    FPE_ff1_encrypt(y, x, xlen, &ff1, FPE_DECRYPT);
-
-    printf("plaintext:");
+    printf("plaintext: ");
     for (int i = 0; i < xlen; ++i)    printf(" %d", x[i]);
     printf("\n\n");
 
-    printf("========== FF3 ==========\n");
-    FPE_ff3_encrypt(x, y, xlen, &ff3, FPE_ENCRYPT);
-
-    printf("ciphertext(numeral string):");
-    for (int i = 0; i < xlen; ++i)    printf(" %d", y[i]);
-    printf("\n");
+    FPE_ff1_encrypt(x, y, xlen, &ff1);
 
     inverse_map_chars(y, result, xlen);
-    printf("ciphertext: %s\n\n", result);
+    printf("FF1 ciphertext: %s\n\n", result);
 
     memset(x, 0, sizeof(x));
-    FPE_ff3_encrypt(y, x, xlen, &ff3, FPE_DECRYPT);
+    FPE_ff1_decrypt(y, x, xlen, &ff1);
 
-    printf("plaintext:");
-    for (int i = 0; i < xlen; ++i)    printf(" %d", x[i]);
-    printf("\n");
+    FPE_ff3_encrypt(x, y, xlen, &ff3);
+    inverse_map_chars(y, result, xlen);
+    printf("FF3 ciphertext: %s\n\n", result);
+
+    memset(x, 0, sizeof(x));
+    FPE_ff3_decrypt(y, x, xlen, &ff3);
 
     FPE_unset_ff1_key(&ff1);
     FPE_unset_ff3_key(&ff3);

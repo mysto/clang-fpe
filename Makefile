@@ -45,5 +45,5 @@ else
 endif
 
 clean:
-	rm $(OBJS)
+	rm $(OBJS) $(EXAMPLE_EXE) $(LIB)
 

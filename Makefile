@@ -44,6 +44,9 @@ else
 	gcc $(CFLAGS) -Wl,-rpath=\$$ORIGIN $(EXAMPLE_SRC) -L. -lfpe -Isrc -o $@
 endif
 
+test:
+	python test.py
+
 clean:
 	rm $(OBJS) $(EXAMPLE_EXE) $(LIB)
 

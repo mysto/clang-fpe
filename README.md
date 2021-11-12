@@ -1,4 +1,6 @@
 [![Build Status](https://app.travis-ci.com/mysto/clang-fpe.svg?branch=master)](https://app.travis-ci.com/mysto/clang-fpe)
+[![License](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+
 
 # FPE - Format Preserving Encryption Implementation in C
 
@@ -12,9 +14,9 @@ and revised on February 28th, 2019 with a draft update for FF3-1.
 
 ## Build and Run
 
-To compile the example.c with the fpe library, just run `make`.
+To compile the example.c with the fpe library, just run
 
-**Run [test.py](https://github.com/0NG/Format-Preserving-Encryption/blob/master/test.py) for testing with official test vectors.**
+`make`
 
 To build on MacOS:
 ```shell
@@ -41,7 +43,7 @@ make test
 ```
 ## Example Usage
 
-This implementation is based on openssl's BIGNUM and AES, so you need to install openssl first.
+This implementation is based on OpenSSL's BIGNUM and AES, so you need to install OpenSSL first.
 
 There are several functions for FF1 and FF3 algorithm, respectively.
 
@@ -106,4 +108,6 @@ void FPE_ff3_encrypt(unsigned int *in, unsigned int *out, unsigned int inlen, FP
 
 ## TODO
 
-1. More effective implementation
+1. Performance testing
+2. FF3-1
+3. Custom alphabet support

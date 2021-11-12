@@ -10,6 +10,19 @@ A note about FF3: There was some [recent cryptanalysis](https://beta.csrc.nist.g
 
 A note about FF2: FF2 was originally NOT recommended by NIST, but it is under review again as DFF. You can read about it [here](http://csrc.nist.gov/groups/ST/toolkit/BCM/documents/proposedmodes/dff/dff-ff2-fpe-scheme-update.pdf).
 
+## Build
+
+To compile the example.c with the fpe library, just run *make example* or *make*.
+
+**Run [test.py](https://github.com/0NG/Format-Preserving-Encryption/blob/master/test.py) for testing with official test vectors.**
+
+On MacOS:
+```shell
+brew install openssl
+CFLAGS="-I$(brew --prefix openssl)/include"
+LDFLAGS="-L$(brew --prefix openssl)/lib"
+```
+
 ## Example Usage
 
 This implementation is based on openssl's BIGNUM and AES, so you need to install openssl first.
@@ -79,17 +92,6 @@ void FPE_ff3_encrypt(unsigned int *in, unsigned int *out, unsigned int inlen, FP
 
 The example code is [example.c](https://github.com/0NG/Format-Preserving-Encryption/blob/master/example.c). Also, there are some official [test vectors](http://csrc.nist.gov/groups/ST/toolkit/examples.html) for both FF1 and FF3 provided by NIST. You can run [test.py](https://github.com/0NG/Format-Preserving-Encryption/blob/master/test.py) with python 3.x.
 
-To compile the example.c with the fpe library, just run *make example* or *make*.
-
-**Run [test.py](https://github.com/0NG/Format-Preserving-Encryption/blob/master/test.py) for testing with official test vectors.**
-
-## Existing Implementations
-
-Based on searching GitHub and the Internet, there are no known reference implementations for either algorithm.
-
-An [existing C++ implementation](https://github.com/randombit/botan/tree/753b4c2d5301574d3c9390b79aa275a49809e6c8/src/lib/misc/fpe_fe1) based on the FFX mode, but the implementation differs from the NIST recommendation. 
-
-Also, another [implementation in Go](https://github.com/capitalone/fpe) is great. I have learned a lot from it.
 
 ## TODO
 

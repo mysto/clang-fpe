@@ -338,14 +338,13 @@ void FF1_decrypt(const unsigned int *in, unsigned int *out, AES_KEY *aes_enc_ctx
     return;
 }
 
-int FPE_set_ff1_key(const unsigned char *userKey, const int bits, const unsigned char *tweak, const unsigned int tweaklen, const int radix, FPE_KEY *key)
+int FPE_create_ff1_key(const unsigned char *userKey, const int bits, const unsigned char *tweak, const unsigned int tweaklen, FPE_KEY *key)
 {
     int ret;
     if (bits != 128 && bits != 192 && bits != 256) {
         ret = -1;
         return ret;
     }
-    key->radix = radix;
     key->tweaklen = tweaklen;
     key->tweak = (unsigned char *)OPENSSL_malloc(tweaklen);
     memcpy(key->tweak, tweak, tweaklen);
@@ -358,12 +357,12 @@ void FPE_unset_ff1_key(FPE_KEY *key)
     OPENSSL_free(key->tweak);
 }
 
-void FPE_ff1_encrypt(unsigned int *in, unsigned int *out, unsigned int inlen, FPE_KEY *key)
+void FPE_ff1_encrypt(unsigned int *in, unsigned int *out, unsigned int inlen, unsigned int radix, FPE_KEY *key)
 {
-    FF1_encrypt(in, out, &key->aes_enc_ctx, key->tweak, key->radix, inlen, key->tweaklen);
+    FF1_encrypt(in, out, &key->aes_enc_ctx, key->tweak, radix, inlen, key->tweaklen);
 }
 
-void FPE_ff1_decrypt(unsigned int *in, unsigned int *out, unsigned int inlen, FPE_KEY *key)
+void FPE_ff1_decrypt(unsigned int *in, unsigned int *out, unsigned int inlen, unsigned int radix, FPE_KEY *key)
 {
-    FF1_decrypt(in, out, &key->aes_enc_ctx, key->tweak, key->radix, inlen, key->tweaklen);
+    FF1_decrypt(in, out, &key->aes_enc_ctx, key->tweak, radix, inlen, key->tweaklen);
 }

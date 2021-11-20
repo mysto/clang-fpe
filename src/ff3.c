@@ -214,14 +214,13 @@ void FF3_decrypt(unsigned int *in, unsigned int *out, AES_KEY *aes_enc_ctx, cons
     return;
 }
 
-int FPE_set_ff3_key(const unsigned char *userKey, const int bits, const unsigned char *tweak, const unsigned int radix, FPE_KEY *key)
+int FPE_create_ff3_key(const unsigned char *userKey, const int bits, const unsigned char *tweak, FPE_KEY *key)
 {
     int ret;
     if (bits != 128 && bits != 192 && bits != 256) {
         ret = -1;
         return ret;
     }
-    key->radix = radix;
     key->tweaklen = 64;
     key->tweak = (unsigned char *)OPENSSL_malloc(64);
     memcpy(key->tweak, tweak, 64);
@@ -238,12 +237,12 @@ void FPE_unset_ff3_key(FPE_KEY *key)
     OPENSSL_free(key->tweak);
 }
 
-void FPE_ff3_encrypt(unsigned int *in, unsigned int *out, unsigned int inlen, FPE_KEY *key)
+void FPE_ff3_encrypt(unsigned int *in, unsigned int *out, unsigned int inlen, unsigned int radix, FPE_KEY *key)
 {
-    FF3_encrypt(in, out, &key->aes_enc_ctx, key->tweak, key->radix, inlen);
+    FF3_encrypt(in, out, &key->aes_enc_ctx, key->tweak, radix, inlen);
 }
 
-void FPE_ff3_decrypt(unsigned int *in, unsigned int *out, unsigned int inlen, FPE_KEY *key)
+void FPE_ff3_decrypt(unsigned int *in, unsigned int *out, unsigned int inlen, unsigned int radix, FPE_KEY *key)
 {
-    FF3_decrypt(in, out, &key->aes_enc_ctx, key->tweak, key->radix, inlen);
+    FF3_decrypt(in, out, &key->aes_enc_ctx, key->tweak, radix, inlen);
 }

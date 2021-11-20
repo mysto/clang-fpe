@@ -3,6 +3,10 @@
 import subprocess
 import re
 
+#
+# format: radix, key, tweak, plainext, ciphertext
+#
+
 ff1 = [
     # AES-128
    [
@@ -181,6 +185,17 @@ ff3 = [
     ],
 ]
 
+ff3_1 = [
+    # AES-128
+    [
+        10,
+        "2DE79D232DF5585D68CE47882AE256D6",
+         "CBD09280979564",
+        "3992520240",
+        "8901801106",
+    ],
+]
+
 def main():
     regexp = re.compile('(?<=ciphertext: )[a-zA-Z0-9]+')
     
@@ -228,6 +243,27 @@ def main():
         else:
             print('Right!')
     
+    print('-------------------------\nFF3_1 test: ')
+    for index, test in enumerate(ff3_1):
+        radix = test[0]
+        key = test[1]
+        tweak = test[2]
+        plain = test[3]
+        cipher = test[4]
+        p = subprocess.Popen(['./example', key, tweak, str(radix), plain], stdin = subprocess.PIPE, stdout = subprocess.PIPE)
+        output = p.communicate()[0]
+        results = regexp.findall(output.decode('utf-8'))[1]
+        p.wait()
+
+        print('case #%d:' % index)
+        print('plaintext: ' + plain)
+        print('ciphertext: ' + results)
+        if results != cipher:
+            print('Wrong!')
+            countErr += 1
+        else:
+            print('Right!')
+
     print('Finish! %d error!' % countErr)
 
 if __name__ == '__main__':

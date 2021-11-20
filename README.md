@@ -61,7 +61,6 @@ void FPE_unset_ff1_key(FPE_KEY *key);
 | bits     | length of userKey (128, 192 or 256)      |
 | tweak    | tweak, represented as a c string         |
 | tweaklen | the byte length of the tweak             |
-| radix    | number of characters in the given alphabet, it must be in [2, 2^16] |
 | key      | FPE_KEY structure                        |
 
 2. encrypt or decrypt text using FF1 algorithm
@@ -75,6 +74,7 @@ void FPE_ff1_encrypt(unsigned int *in, unsigned int *out, unsigned int inlen, un
 | in    | numeral string to be encrypted, represented as an array of integers |
 | out   | encrypted numeral string, represented as an array of integers |
 | inlen | the length of input numeral string (in)  |
+| radix    | number of characters in the given alphabet, it must be in [2, 2^16] |
 | key   | FPE_KEY structure that have been set with key and tweak |
 
 3. Set and unset FF3 key and tweak
@@ -90,7 +90,6 @@ void FPE_unset_ff3_key(FPE_KEY *key);
 | userKey | encryption key (128 bit, 192 bits or 256 bits), represented as a c string |
 | bits    | length of userKey (128, 192 or 256)      |
 | tweak   | tweak, represented as a c string (it must be 64 bytes) |
-| radix   | number of characters in the given alphabet, it must be in [2, 2^16] |
 | key     | FPE_KEY structure                        |
 
 4. encrypt or decrypt text using FF3 algorithm
@@ -104,6 +103,7 @@ void FPE_ff3_encrypt(unsigned int *in, unsigned int *out, unsigned int inlen, un
 | in    | numeral string to be encrypted, represented as an array of integers |
 | out   | encrypted numeral string, represented as an array of integers |
 | inlen | the length of input numeral string (in)  |
+| radix   | number of characters in the given alphabet, it must be in [2, 2^16] |
 | key   | FPE_KEY structure that have been set with key and tweak |
 
 ## TODO

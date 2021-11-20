@@ -352,7 +352,7 @@ int FPE_create_ff1_key(const unsigned char *userKey, const int bits, const unsig
     return ret;
 }
 
-void FPE_unset_ff1_key(FPE_KEY *key)
+void FPE_delete_ff1_key(FPE_KEY *key)
 {
     OPENSSL_free(key->tweak);
 }

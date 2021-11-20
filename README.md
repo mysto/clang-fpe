@@ -47,12 +47,12 @@ This implementation is based on OpenSSL's BIGNUM and AES, so you need to install
 
 There are several functions for FF1 and FF3 algorithm, respectively.
 
-1. Set and unset FF1 key and tweak
+1. Create and delete FF1 key and tweak
 
 ```c++
 int FPE_create_ff1_key(const unsigned char *userKey, const int bits, const unsigned char *tweak, const unsigned int tweaklen, FPE_KEY *key);
 
-void FPE_unset_ff1_key(FPE_KEY *key);
+void FPE_delete_ff1_key(FPE_KEY *key);
 ```
 
 | name     | description                              |
@@ -75,14 +75,14 @@ void FPE_ff1_encrypt(unsigned int *in, unsigned int *out, unsigned int inlen, un
 | out   | encrypted numeral string, represented as an array of integers |
 | inlen | the length of input numeral string (in)  |
 | radix    | number of characters in the given alphabet, it must be in [2, 2^16] |
-| key   | FPE_KEY structure that have been set with key and tweak |
+| key   | FPE_KEY structure that has been set with key and tweak |
 
-3. Set and unset FF3 key and tweak
+3. Create and delete FF3 key and tweak
 
 ```c++
 int FPE_set_ff3_key(const unsigned char *userKey, const int bits, const unsigned char *tweak, FPE_KEY *key);
 
-void FPE_unset_ff3_key(FPE_KEY *key);
+void FPE_delete_ff3_key(FPE_KEY *key);
 ```
 
 | name    | description                              |
@@ -104,7 +104,7 @@ void FPE_ff3_encrypt(unsigned int *in, unsigned int *out, unsigned int inlen, un
 | out   | encrypted numeral string, represented as an array of integers |
 | inlen | the length of input numeral string (in)  |
 | radix   | number of characters in the given alphabet, it must be in [2, 2^16] |
-| key   | FPE_KEY structure that have been set with key and tweak |
+| key   | FPE_KEY structure that has been set with key and tweak |
 
 ## TODO
 

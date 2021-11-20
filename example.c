@@ -100,8 +100,8 @@ int main(int argc, char *argv[])
     memset(x, 0, sizeof(x));
     FPE_ff3_decrypt(y, x, xlen, radix, &ff3);
 
-    FPE_unset_ff1_key(&ff1);
-    FPE_unset_ff3_key(&ff3);
+    FPE_delete_ff1_key(&ff1);
+    FPE_delete_ff3_key(&ff3);
 
     return 0;
 }

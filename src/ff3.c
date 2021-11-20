@@ -232,7 +232,25 @@ int FPE_create_ff3_key(const unsigned char *userKey, const int bits, const unsig
     return ret;
 }
 
-void FPE_unset_ff3_key(FPE_KEY *key)
+int FPE_create_ff3_1_key(const unsigned char *userKey, const int bits, const unsigned char *tweak, FPE_KEY *key)
+{
+    int ret;
+    if (bits != 128 && bits != 192 && bits != 256) {
+        ret = -1;
+        return ret;
+    }
+    key->tweaklen = 56;
+    key->tweak = (unsigned char *)OPENSSL_malloc(64);
+    memcpy(key->tweak, tweak, 64);
+
+    unsigned char tmp[32];
+    memcpy(tmp, userKey, bits >> 3);
+    rev_bytes(tmp, bits >> 3);
+    ret = AES_set_encrypt_key(tmp, bits, &key->aes_enc_ctx);
+    return ret;
+}
+
+void FPE_delete_ff3_key(FPE_KEY *key)
 {
     OPENSSL_free(key->tweak);
 }

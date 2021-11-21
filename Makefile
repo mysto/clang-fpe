@@ -1,4 +1,4 @@
-CFLAGS := $(shell printenv CFLAGS) -O2 -Wall -fPIC
+CFLAGS := $(shell printenv CFLAGS) -O2 -Wall -fPIC -Wno-deprecated-declarations
 SO_LINKS = $(shell printenv LDFLAGS) -lm -lcrypto
 
 UNAME := $(shell uname -s)

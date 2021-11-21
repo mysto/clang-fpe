@@ -206,7 +206,6 @@ class TestFF3(unittest.TestCase):
 
     def test_vectors_ff1(self):
         regexp = re.compile('(?<=ciphertext: )[a-zA-Z0-9]+')
-        print('------------------')
         for index, test in enumerate(ff1):
             radix = test[0]
             key = test[1]
@@ -218,14 +217,13 @@ class TestFF3(unittest.TestCase):
             results = regexp.findall(output.decode('utf-8'))[0]
             p.wait()
 
-            print(f'FF1 case #: {index}')
-            print(f'plaintext: {plain}')
-            print(f'ciphertext: {results}')
+            #print(f'FF1 case #: {index}')
+            #print(f'plaintext: {plain}')
+            #print(f'ciphertext: {results}')
             self.assertEqual(results, cipher)
     
     def test_vectors_ff3(self):
         regexp = re.compile('(?<=ciphertext: )[a-zA-Z0-9]+')
-        print('------------------')
         for index, test in enumerate(ff3):
             radix = test[0]
             key = test[1]
@@ -237,9 +235,9 @@ class TestFF3(unittest.TestCase):
             results = regexp.findall(output.decode('utf-8'))[1]
             p.wait()
 
-            print(f'FF3 case #: {index}')
-            print(f'plaintext: {plain}')
-            print(f'ciphertext: {results}')
+            #print(f'FF3 case #: {index}')
+            #print(f'plaintext: {plain}')
+            #print(f'ciphertext: {results}')
             self.assertEqual(results, cipher)
     
     def test_encrypt_acvp(self):

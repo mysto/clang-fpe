@@ -1,7 +1,8 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 
 import subprocess
 import re
+import unittest
 
 #
 # format: radix, key, tweak, plainext, ciphertext
@@ -185,87 +186,72 @@ ff3 = [
     ],
 ]
 
-ff3_1 = [
-    # AES-128
-    [
-        10,
-        "2DE79D232DF5585D68CE47882AE256D6",
-         "CBD09280979564",
-        "3992520240",
-        "8901801106",
-    ],
+# ACVP vectors for FF3-1 using 56-bit tweaks from private communication updating:
+# https://pages.nist.gov/ACVP/draft-celi-acvp-symmetric.html#name-test-groups
+
+testVectors_ACVP_AES_FF3_1 = [
+    # AES - 128
+    {
+        # tg: 1 tc: 1
+        "radix": 10,
+        "alphabet": "0123456789",
+        "key": "2DE79D232DF5585D68CE47882AE256D6",
+        "tweak": "CBD09280979564",
+        "plaintext": "3992520240",
+        "ciphertext": "8901801106"
+    },
 ]
 
-def main():
-    regexp = re.compile('(?<=ciphertext: )[a-zA-Z0-9]+')
-    
-    countErr = 0
-    
-    print('FF1 test: ')
-    for index, test in enumerate(ff1):
-        radix = test[0]
-        key = test[1]
-        tweak = test[2]
-        plain = test[3]
-        cipher = test[4]
-        p = subprocess.Popen(['./example', key, tweak, str(radix), plain], stdin = subprocess.PIPE, stdout = subprocess.PIPE)
-        output = p.communicate()[0]
-        results = regexp.findall(output.decode('utf-8'))[0]
-        p.wait()
-    
-        print('case #%d:' % index)
-        print('plaintext: ' + plain)
-        print('ciphertext: ' + results)
-        if results != cipher:
-            print('Wrong!')
-            countErr += 1
-        else:
-            print('Right!')
-    
-    print('-------------------------\nFF3 test: ')
-    for index, test in enumerate(ff3):
-        radix = test[0]
-        key = test[1]
-        tweak = test[2]
-        plain = test[3]
-        cipher = test[4]
-        p = subprocess.Popen(['./example', key, tweak, str(radix), plain], stdin = subprocess.PIPE, stdout = subprocess.PIPE)
-        output = p.communicate()[0]
-        results = regexp.findall(output.decode('utf-8'))[1]
-        p.wait()
-    
-        print('case #%d:' % index)
-        print('plaintext: ' + plain)
-        print('ciphertext: ' + results)
-        if results != cipher:
-            print('Wrong!')
-            countErr += 1
-        else:
-            print('Right!')
-    
-    print('-------------------------\nFF3_1 test: ')
-    for index, test in enumerate(ff3_1):
-        radix = test[0]
-        key = test[1]
-        tweak = test[2]
-        plain = test[3]
-        cipher = test[4]
-        p = subprocess.Popen(['./example', key, tweak, str(radix), plain], stdin = subprocess.PIPE, stdout = subprocess.PIPE)
-        output = p.communicate()[0]
-        results = regexp.findall(output.decode('utf-8'))[1]
-        p.wait()
+class TestFF3(unittest.TestCase):
 
-        print('case #%d:' % index)
-        print('plaintext: ' + plain)
-        print('ciphertext: ' + results)
-        if results != cipher:
-            print('Wrong!')
-            countErr += 1
-        else:
-            print('Right!')
+    def test_vectors_ff1(self):
+        regexp = re.compile('(?<=ciphertext: )[a-zA-Z0-9]+')
+        print('------------------')
+        for index, test in enumerate(ff1):
+            radix = test[0]
+            key = test[1]
+            tweak = test[2]
+            plain = test[3]
+            cipher = test[4]
+            p = subprocess.Popen(['./example', key, tweak, str(radix), plain], stdin = subprocess.PIPE, stdout = subprocess.PIPE)
+            output = p.communicate()[0]
+            results = regexp.findall(output.decode('utf-8'))[0]
+            p.wait()
 
-    print('Finish! %d error!' % countErr)
+            print(f'FF1 case #: {index}')
+            print(f'plaintext: {plain}')
+            print(f'ciphertext: {results}')
+            self.assertEqual(results, cipher)
+    
+    def test_vectors_ff3(self):
+        regexp = re.compile('(?<=ciphertext: )[a-zA-Z0-9]+')
+        print('------------------')
+        for index, test in enumerate(ff3):
+            radix = test[0]
+            key = test[1]
+            tweak = test[2]
+            plain = test[3]
+            cipher = test[4]
+            p = subprocess.Popen(['./example', key, tweak, str(radix), plain], stdin = subprocess.PIPE, stdout = subprocess.PIPE)
+            output = p.communicate()[0]
+            results = regexp.findall(output.decode('utf-8'))[1]
+            p.wait()
+
+            print(f'FF3 case #: {index}')
+            print(f'plaintext: {plain}')
+            print(f'ciphertext: {results}')
+            self.assertEqual(results, cipher)
+    
+    def test_encrypt_acvp(self):
+        regexp = re.compile('(?<=ciphertext: )[a-zA-Z0-9]+')
+        for testVector in testVectors_ACVP_AES_FF3_1:
+            with self.subTest(testVector=testVector):
+                p = subprocess.Popen(['./example', testVector['key'], testVector['tweak'], str(testVector['radix']), testVector['plaintext']], stdin = subprocess.PIPE, stdout = subprocess.PIPE)
+                output = p.communicate()[0]
+                results = regexp.findall(output.decode('utf-8'))[1]
+                p.wait()
+                self.assertEqual(results, testVector['ciphertext'])
+
 
 if __name__ == '__main__':
-    main()
-
+    unittest.main()

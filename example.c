@@ -74,11 +74,11 @@ int main(int argc, char *argv[])
     for (int i = 0; i < tlen; ++i)    printf(" %02x", t[i]);
     if (tlen)    puts("");
 
-    FPE_create_ff1_key(k, klen * 8, t, tlen, &ff1);
+    FPE_create_ff1_key(k, klen * 8, t, tlen, radix, &ff1);
 	if (tlen == 7) {
-        FPE_create_ff3_1_key(k, klen * 8, t, &ff3);
+        FPE_create_ff3_1_key(k, klen * 8, t, radix, &ff3);
 	} else {
-        FPE_create_ff3_key(k, klen * 8, t, &ff3);
+        FPE_create_ff3_key(k, klen * 8, t, radix, &ff3);
     }
 
     printf("after map: ");
@@ -89,20 +89,20 @@ int main(int argc, char *argv[])
     for (int i = 0; i < xlen; ++i)    printf(" %d", x[i]);
     printf("\n\n");
 
-    FPE_ff1_encrypt(x, y, xlen, radix, &ff1);
+    FPE_ff1_encrypt(x, y, xlen, &ff1);
 
     inverse_map_chars(y, result, xlen);
     printf("FF1 ciphertext: %s\n\n", result);
 
     memset(x, 0, sizeof(x));
-    FPE_ff1_decrypt(y, x, xlen, radix, &ff1);
+    FPE_ff1_decrypt(y, x, xlen, &ff1);
 
-    FPE_ff3_encrypt(x, y, xlen, radix, &ff3);
+    FPE_ff3_encrypt(x, y, xlen, &ff3);
     inverse_map_chars(y, result, xlen);
     printf("FF3 ciphertext: %s\n\n", result);
 
     memset(x, 0, sizeof(x));
-    FPE_ff3_decrypt(y, x, xlen, radix, &ff3);
+    FPE_ff3_decrypt(y, x, xlen, &ff3);
 
     FPE_delete_ff1_key(&ff1);
     FPE_delete_ff3_key(&ff3);

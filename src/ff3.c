@@ -64,7 +64,7 @@ void num2str_rev(const BIGNUM *X, unsigned int *Y, unsigned int radix, int len, 
     return;
 }
 
-void FF3_encrypt(unsigned int *in, unsigned int *out, AES_KEY *aes_enc_ctx, const unsigned char *tweak, unsigned int radix, unsigned int inlen)
+void FF3_encrypt(unsigned int *in, unsigned int *out, FPE_KEY *key, const unsigned char *tweak, unsigned int inlen)
 {
     BIGNUM *bnum = BN_new(),
            *y = BN_new(),
@@ -78,8 +78,8 @@ void FF3_encrypt(unsigned int *in, unsigned int *out, AES_KEY *aes_enc_ctx, cons
     int u = ceil2(inlen, 1);
     int v = inlen - u;
     unsigned int *A = out, *B = out + u;
-    pow_uv(qpow_u, qpow_v, radix, u, v, ctx);
-    unsigned int temp = (unsigned int)ceil(u * log2(radix));
+    pow_uv(qpow_u, qpow_v, key->radix, u, v, ctx);
+    unsigned int temp = (unsigned int)ceil(u * log2(key->radix));
     const int b = ceil2(temp, 3);
 
     unsigned char S[16], P[16];
@@ -97,7 +97,7 @@ void FF3_encrypt(unsigned int *in, unsigned int *out, AES_KEY *aes_enc_ctx, cons
         }
         P[3] ^= i & 0xff;
 
-        str2num_rev(bnum, B, radix, inlen - m, ctx);
+        str2num_rev(bnum, B, key->radix, inlen - m, ctx);
         memset(Bytes, 0x00, b);
         int BytesLen = BN_bn2bin(bnum, Bytes);
         BytesLen = BytesLen > 12? 12: BytesLen;
@@ -106,14 +106,14 @@ void FF3_encrypt(unsigned int *in, unsigned int *out, AES_KEY *aes_enc_ctx, cons
 
         // iii
         rev_bytes(P, 16);
-        AES_encrypt(P, S, aes_enc_ctx);
+        AES_encrypt(P, S, &key->aes_enc_ctx);
         rev_bytes(S, 16);
 
         // iv
         BN_bin2bn(S, 16, y);
 
         // v
-        str2num_rev(anum, A, radix, m, ctx);
+        str2num_rev(anum, A, key->radix, m, ctx);
         if (i & 1)    BN_mod_add(c, anum, y, qpow_v, ctx);
         else    BN_mod_add(c, anum, y, qpow_u, ctx);
 
@@ -122,7 +122,7 @@ void FF3_encrypt(unsigned int *in, unsigned int *out, AES_KEY *aes_enc_ctx, cons
         B = (unsigned int *)( (uintptr_t)B ^ (uintptr_t)A );
         A = (unsigned int *)( (uintptr_t)A ^ (uintptr_t)B );
 
-        num2str_rev(c, B, radix, m, ctx);
+        num2str_rev(c, B, key->radix, m, ctx);
 
     }
 
@@ -138,7 +138,7 @@ void FF3_encrypt(unsigned int *in, unsigned int *out, AES_KEY *aes_enc_ctx, cons
     return;
 }
 
-void FF3_decrypt(unsigned int *in, unsigned int *out, AES_KEY *aes_enc_ctx, const unsigned char *tweak, unsigned int radix, unsigned int inlen)
+void FF3_decrypt(unsigned int *in, unsigned int *out, FPE_KEY *key, const unsigned char *tweak, unsigned int inlen)
 {
     BIGNUM *bnum = BN_new(),
            *y = BN_new(),
@@ -152,8 +152,8 @@ void FF3_decrypt(unsigned int *in, unsigned int *out, AES_KEY *aes_enc_ctx, cons
     int u = ceil2(inlen, 1);
     int v = inlen - u;
     unsigned int *A = out, *B = out + u;
-    pow_uv(qpow_u, qpow_v, radix, u, v, ctx);
-    unsigned int temp = (unsigned int)ceil(u * log2(radix));
+    pow_uv(qpow_u, qpow_v, key->radix, u, v, ctx);
+    unsigned int temp = (unsigned int)ceil(u * log2(key->radix));
     const int b = ceil2(temp, 3);
 
     unsigned char S[16], P[16];
@@ -172,7 +172,7 @@ void FF3_decrypt(unsigned int *in, unsigned int *out, AES_KEY *aes_enc_ctx, cons
 
         // ii
 
-        str2num_rev(anum, A, radix, inlen - m, ctx);
+        str2num_rev(anum, A, key->radix, inlen - m, ctx);
         memset(Bytes, 0x00, b);
         int BytesLen = BN_bn2bin(anum, Bytes);
         BytesLen = BytesLen > 12? 12: BytesLen;
@@ -182,14 +182,14 @@ void FF3_decrypt(unsigned int *in, unsigned int *out, AES_KEY *aes_enc_ctx, cons
         // iii
         rev_bytes(P, 16);
         memset(S, 0x00, sizeof(S));
-        AES_encrypt(P, S, aes_enc_ctx);
+        AES_encrypt(P, S, &key->aes_enc_ctx);
         rev_bytes(S, 16);
 
         // iv
         BN_bin2bn(S, 16, y);
 
         // v
-        str2num_rev(bnum, B, radix, m, ctx);
+        str2num_rev(bnum, B, key->radix, m, ctx);
         if (i & 1)    BN_mod_sub(c, bnum, y, qpow_v, ctx);
         else    BN_mod_sub(c, bnum, y, qpow_u, ctx);
 
@@ -198,7 +198,7 @@ void FF3_decrypt(unsigned int *in, unsigned int *out, AES_KEY *aes_enc_ctx, cons
         B = (unsigned int *)( (uintptr_t)B ^ (uintptr_t)A );
         A = (unsigned int *)( (uintptr_t)A ^ (uintptr_t)B );
 
-        num2str_rev(c, A, radix, m, ctx);
+        num2str_rev(c, A, key->radix, m, ctx);
 
     }
 
@@ -214,7 +214,7 @@ void FF3_decrypt(unsigned int *in, unsigned int *out, AES_KEY *aes_enc_ctx, cons
     return;
 }
 
-int FPE_create_ff3_key(const unsigned char *userKey, const int bits, const unsigned char *tweak, FPE_KEY *key)
+int FPE_create_ff3_key(const unsigned char *userKey, const int bits, const unsigned char *tweak, unsigned int radix, FPE_KEY *key)
 {
     int ret;
     if (bits != 128 && bits != 192 && bits != 256) {
@@ -224,6 +224,7 @@ int FPE_create_ff3_key(const unsigned char *userKey, const int bits, const unsig
     key->tweaklen = 64;
     key->tweak = (unsigned char *)OPENSSL_malloc(8);
     memcpy(key->tweak, tweak, 8);
+	key->radix = radix;
 
     unsigned char tmp[32];
     memcpy(tmp, userKey, bits >> 3);
@@ -232,7 +233,7 @@ int FPE_create_ff3_key(const unsigned char *userKey, const int bits, const unsig
     return ret;
 }
 
-int FPE_create_ff3_1_key(const unsigned char *userKey, const int bits, const unsigned char *tweak, FPE_KEY *key)
+int FPE_create_ff3_1_key(const unsigned char *userKey, const int bits, const unsigned char *tweak, unsigned int radix, FPE_KEY *key)
 {
     int ret;
     if (bits != 128 && bits != 192 && bits != 256) {
@@ -242,6 +243,7 @@ int FPE_create_ff3_1_key(const unsigned char *userKey, const int bits, const uns
     key->tweaklen = 64;
     key->tweak = (unsigned char *)OPENSSL_malloc(8);
     memcpy(key->tweak, tweak, 7);
+	key->radix = radix;
 
     // FF3-1: transform 56-bit to 64-bit tweak
     unsigned char byte = tweak[3];
@@ -260,12 +262,12 @@ void FPE_delete_ff3_key(FPE_KEY *key)
     OPENSSL_free(key->tweak);
 }
 
-void FPE_ff3_encrypt(unsigned int *in, unsigned int *out, unsigned int inlen, unsigned int radix, FPE_KEY *key)
+void FPE_ff3_encrypt(unsigned int *in, unsigned int *out, unsigned int inlen, FPE_KEY *key)
 {
-    FF3_encrypt(in, out, &key->aes_enc_ctx, key->tweak, radix, inlen);
+    FF3_encrypt(in, out, key, key->tweak, inlen);
 }
 
-void FPE_ff3_decrypt(unsigned int *in, unsigned int *out, unsigned int inlen, unsigned int radix, FPE_KEY *key)
+void FPE_ff3_decrypt(unsigned int *in, unsigned int *out, unsigned int inlen, FPE_KEY *key)
 {
-    FF3_decrypt(in, out, &key->aes_enc_ctx, key->tweak, radix, inlen);
+    FF3_decrypt(in, out, key, key->tweak, inlen);
 }

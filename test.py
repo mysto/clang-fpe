@@ -200,6 +200,15 @@ testVectors_ACVP_AES_FF3_1 = [
         "plaintext": "3992520240",
         "ciphertext": "8901801106"
     },
+    {
+        # tg: 1 tc: 1
+        "radix": 10,
+        "alphabet": "0123456789",
+        "key": "01C63017111438F7FC8E24EB16C71AB5",
+        "tweak": "C4E822DCD09F27",
+        "plaintext": "60761757463116869318437658042297305934914824457484538562",
+        "ciphertext": "35637144092473838892796702739628394376915177448290847293"
+    },
 ]
 
 class TestFF3(unittest.TestCase):

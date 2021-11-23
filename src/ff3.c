@@ -239,9 +239,9 @@ int FPE_create_ff3_1_key(const unsigned char *userKey, const int bits, const uns
         ret = -1;
         return ret;
     }
-    key->tweaklen = 56;
+    key->tweaklen = 64;
     key->tweak = (unsigned char *)OPENSSL_malloc(8);
-    memcpy(key->tweak, tweak, 8);
+    memcpy(key->tweak, tweak, 7);
 
     // FF3-1: transform 56-bit to 64-bit tweak
     unsigned char byte = tweak[3];

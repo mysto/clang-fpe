@@ -75,7 +75,11 @@ int main(int argc, char *argv[])
     if (tlen)    puts("");
 
     FPE_create_ff1_key(k, klen * 8, t, tlen, &ff1);
-    FPE_create_ff3_key(k, klen * 8, t, &ff3);
+	if (tlen == 7) {
+        FPE_create_ff3_1_key(k, klen * 8, t, &ff3);
+	} else {
+        FPE_create_ff3_key(k, klen * 8, t, &ff3);
+    }
 
     printf("after map: ");
     for (int i = 0; i < xlen; ++i)    printf(" %d", x[i]);

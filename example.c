@@ -3,8 +3,9 @@
 #include <assert.h>
 #include <string.h>
 #include <fpe.h>
+#include <openssl/crypto.h>
 
-void hex2chars(char hex[], unsigned char result[])
+/*void hex2chars(char hex[], unsigned char result[])
 {
     int len = strlen(hex);
     char temp[3];
@@ -17,7 +18,7 @@ void hex2chars(char hex[], unsigned char result[])
         result[j] = (char)strtol(temp, NULL, 16);
         ++j;
     }
-}
+}*/
 
 void map_chars(char str[], unsigned int result[])
 {
@@ -58,8 +59,10 @@ int main(int argc, char *argv[])
     unsigned int x[100],
                  y[xlen];
 
-    hex2chars(argv[1], k);
-    hex2chars(argv[2], t);
+	OPENSSL_hexstr2buf_ex(k, 100, NULL, argv[1], '\0' );
+	OPENSSL_hexstr2buf_ex(t, 100, NULL, argv[2], '\0' );
+    //hex2chars(argv[1], k);
+    //hex2chars(argv[2], t);
     map_chars(argv[4], x);
 
     for (int i = 0; i < xlen; ++i)

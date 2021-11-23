@@ -39,9 +39,9 @@ src/fpe_locl.o: src/fpe_locl.c
 
 $(EXAMPLE_EXE): $(EXAMPLE_SRC) $(LIB)
 ifeq ($(UNAME),Darwin)
-	gcc $(CFLAGS) -Wl, $(EXAMPLE_SRC) -L. -lfpe -Isrc -o $@
+	gcc $(CFLAGS) -Wl, $(EXAMPLE_SRC) -L. -lfpe $(SO_LINKS) -Isrc -o $@
 else
-	gcc $(CFLAGS) -Wl,-rpath=\$$ORIGIN $(EXAMPLE_SRC) -L. -lfpe -Isrc -o $@
+	gcc $(CFLAGS) -Wl,-rpath=\$$ORIGIN $(EXAMPLE_SRC) -L. -lfpe $(SO_LINKS) -Isrc -o $@
 endif
 
 test:

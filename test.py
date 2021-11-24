@@ -250,7 +250,7 @@ testVectors_ACVP_AES_FF3_1 = [
 
 ]
 
-class TestFF3(unittest.TestCase):
+class TestFPE(unittest.TestCase):
 
     def test_vectors_ff1(self):
         regexp = re.compile('(?<=ciphertext: )[a-zA-Z0-9]+')
@@ -263,13 +263,13 @@ class TestFF3(unittest.TestCase):
                 cipher = test[4]
                 p = subprocess.Popen(['./example', key, tweak, str(radix), plain], stdin = subprocess.PIPE, stdout = subprocess.PIPE)
                 output = p.communicate()[0]
-                results = regexp.findall(output.decode('utf-8'))[0]
+                results = (regexp.findall(output.decode('utf-8')))
                 p.wait()
 
                 #print(f'FF1 case #: {index}')
                 #print(f'plaintext: {plain}')
                 #print(f'ciphertext: {results}')
-                self.assertEqual(results, cipher)
+                self.assertEqual(results[0], cipher)
     
     def test_vectors_ff3(self):
         regexp = re.compile('(?<=ciphertext: )[a-zA-Z0-9]+')
@@ -282,13 +282,13 @@ class TestFF3(unittest.TestCase):
                 cipher = test[4]
                 p = subprocess.Popen(['./example', key, tweak, str(radix), plain], stdin = subprocess.PIPE, stdout = subprocess.PIPE)
                 output = p.communicate()[0]
-                results = regexp.findall(output.decode('utf-8'))[1]
+                results = (regexp.findall(output.decode('utf-8')))
                 p.wait()
 
                 #print(f'FF3 case #: {index}')
                 #print(f'plaintext: {plain}')
                 #print(f'ciphertext: {results}')
-                self.assertEqual(results, cipher)
+                self.assertEqual(results[1], cipher)
     
     def test_encrypt_acvp(self):
         regexp = re.compile('(?<=ciphertext: )[a-zA-Z0-9]+')
@@ -296,9 +296,9 @@ class TestFF3(unittest.TestCase):
             with self.subTest(testVector=testVector):
                 p = subprocess.Popen(['./example', testVector['key'], testVector['tweak'], str(testVector['radix']), testVector['plaintext']], stdin = subprocess.PIPE, stdout = subprocess.PIPE)
                 output = p.communicate()[0]
-                results = regexp.findall(output.decode('utf-8'))[1]
+                results = (regexp.findall(output.decode('utf-8')))
                 p.wait()
-                self.assertEqual(results, testVector['ciphertext'])
+                self.assertEqual(results[1], testVector['ciphertext'])
 
 
 if __name__ == '__main__':

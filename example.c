@@ -5,21 +5,6 @@
 #include <fpe.h>
 #include <openssl/crypto.h>
 
-/*void hex2chars(char hex[], unsigned char result[])
-{
-    int len = strlen(hex);
-    char temp[3];
-    temp[2] = 0x00;
-
-    int j = 0;
-    for (int i = 0; i < len; i += 2) {
-        temp[0] = hex[i];
-        temp[1] = hex[i + 1];
-        result[j] = (char)strtol(temp, NULL, 16);
-        ++j;
-    }
-}*/
-
 void map_chars(char str[], unsigned int result[])
 {
     int len = strlen(str);
@@ -49,9 +34,7 @@ int main(int argc, char *argv[])
         return 0;
     }
 
-    unsigned char k[100],
-                  t[100],
-                  result[100];
+    unsigned char result[100];
     int xlen = strlen(argv[4]),
         klen = strlen(argv[1]) / 2,
         tlen = strlen(argv[2]) / 2,
@@ -59,10 +42,11 @@ int main(int argc, char *argv[])
     unsigned int x[100],
                  y[xlen];
 
-	OPENSSL_hexstr2buf_ex(k, 100, NULL, argv[1], '\0' );
-	OPENSSL_hexstr2buf_ex(t, 100, NULL, argv[2], '\0' );
-    //hex2chars(argv[1], k);
-    //hex2chars(argv[2], t);
+    unsigned char *k = OPENSSL_hexstr2buf(argv[1], NULL);
+	unsigned char *t = "\0";
+	if (tlen > 0) {
+	    t = OPENSSL_hexstr2buf(argv[2], NULL);
+	}
     map_chars(argv[4], x);
 
     for (int i = 0; i < xlen; ++i)
@@ -83,6 +67,8 @@ int main(int argc, char *argv[])
 	} else {
         FPE_create_ff3_key(k, klen * 8, t, radix, &ff3);
     }
+	OPENSSL_free(k);
+	OPENSSL_free(t);
 
     printf("after map: ");
     for (int i = 0; i < xlen; ++i)    printf(" %d", x[i]);

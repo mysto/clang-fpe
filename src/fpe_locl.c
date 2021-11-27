@@ -37,3 +37,26 @@ void pow_uv(BIGNUM *pow_u, BIGNUM *pow_v, unsigned int x, int u, int v, BN_CTX *
     return;
     */
 }
+
+void map_chars(char str[], unsigned int result[])
+{
+    int len = strlen(str);
+
+    for (int i = 0; i < len; ++i)
+        if (str[i] >= 'a')
+            result[i] = str[i] - 'a' + 10;
+        else
+            result[i] = str[i] - '0';
+}
+
+void inverse_map_chars(unsigned result[], unsigned char str[], int len)
+{
+    for (int i = 0; i < len; ++i)
+        if (result[i] < 10)
+            str[i] = result[i] + '0';
+        else 
+            str[i] = result[i] - 10 + 'a';
+
+    str[len] = 0x00;
+}
+

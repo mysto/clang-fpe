@@ -64,7 +64,7 @@ void num2str_rev(const BIGNUM *X, unsigned int *Y, unsigned int radix, int len, 
     return;
 }
 
-void FF3_encrypt(unsigned int *in, unsigned int *out, FPE_KEY *key, const unsigned char *tweak, unsigned int inlen)
+void FF3_encrypt(unsigned int *plaintext, unsigned int *ciphertext, FPE_KEY *key, const unsigned char *tweak, unsigned int txtlen)
 {
     BIGNUM *bnum = BN_new(),
            *y = BN_new(),
@@ -74,10 +74,16 @@ void FF3_encrypt(unsigned int *in, unsigned int *out, FPE_KEY *key, const unsign
            *qpow_v = BN_new();
     BN_CTX *ctx = BN_CTX_new();
 
-    memcpy(out, in, inlen << 2);
-    int u = ceil2(inlen, 1);
-    int v = inlen - u;
-    unsigned int *A = out, *B = out + u;
+
+    // Calculate split point
+    int u = ceil2(txtlen, 1);
+    int v = txtlen - u;
+
+    // Split the message
+    memcpy(ciphertext, plaintext, txtlen << 2); 
+    unsigned int *A = ciphertext;
+    unsigned int *B = ciphertext + u;
+
     pow_uv(qpow_u, qpow_v, key->radix, u, v, ctx);
     unsigned int temp = (unsigned int)ceil(u * log2(key->radix));
     const int b = ceil2(temp, 3);
@@ -97,7 +103,7 @@ void FF3_encrypt(unsigned int *in, unsigned int *out, FPE_KEY *key, const unsign
         }
         P[3] ^= i & 0xff;
 
-        str2num_rev(bnum, B, key->radix, inlen - m, ctx);
+        str2num_rev(bnum, B, key->radix, txtlen - m, ctx);
         memset(Bytes, 0x00, b);
         int BytesLen = BN_bn2bin(bnum, Bytes);
         BytesLen = BytesLen > 12? 12: BytesLen;
@@ -138,7 +144,7 @@ void FF3_encrypt(unsigned int *in, unsigned int *out, FPE_KEY *key, const unsign
     return;
 }
 
-void FF3_decrypt(unsigned int *in, unsigned int *out, FPE_KEY *key, const unsigned char *tweak, unsigned int inlen)
+void FF3_decrypt(unsigned int *ciphertext, unsigned int *plaintext, FPE_KEY *key, const unsigned char *tweak, unsigned int txtlen)
 {
     BIGNUM *bnum = BN_new(),
            *y = BN_new(),
@@ -148,10 +154,16 @@ void FF3_decrypt(unsigned int *in, unsigned int *out, FPE_KEY *key, const unsign
            *qpow_v = BN_new();
     BN_CTX *ctx = BN_CTX_new();
 
-    memcpy(out, in, inlen << 2);
-    int u = ceil2(inlen, 1);
-    int v = inlen - u;
-    unsigned int *A = out, *B = out + u;
+    memcpy(plaintext, ciphertext, txtlen << 2);
+
+    // Calculate split point
+    int u = ceil2(txtlen, 1);
+    int v = txtlen - u;
+
+    // Split the message
+    unsigned int *A = ciphertext;
+    unsigned int *B = ciphertext + u;
+
     pow_uv(qpow_u, qpow_v, key->radix, u, v, ctx);
     unsigned int temp = (unsigned int)ceil(u * log2(key->radix));
     const int b = ceil2(temp, 3);
@@ -172,7 +184,7 @@ void FF3_decrypt(unsigned int *in, unsigned int *out, FPE_KEY *key, const unsign
 
         // ii
 
-        str2num_rev(anum, A, key->radix, inlen - m, ctx);
+        str2num_rev(anum, A, key->radix, txtlen - m, ctx);
         memset(Bytes, 0x00, b);
         int BytesLen = BN_bn2bin(anum, Bytes);
         BytesLen = BytesLen > 12? 12: BytesLen;
@@ -262,12 +274,12 @@ void FPE_delete_ff3_key(FPE_KEY *key)
     OPENSSL_free(key->tweak);
 }
 
-void FPE_ff3_encrypt(unsigned int *in, unsigned int *out, unsigned int inlen, FPE_KEY *key)
+void FPE_ff3_encrypt(unsigned int *in, unsigned int *out, unsigned int txtlen, FPE_KEY *key)
 {
-    FF3_encrypt(in, out, key, key->tweak, inlen);
+    FF3_encrypt(in, out, key, key->tweak, txtlen);
 }
 
-void FPE_ff3_decrypt(unsigned int *in, unsigned int *out, unsigned int inlen, FPE_KEY *key)
+void FPE_ff3_decrypt(unsigned int *in, unsigned int *out, unsigned int txtlen, FPE_KEY *key)
 {
-    FF3_decrypt(in, out, key, key->tweak, inlen);
+    FF3_decrypt(in, out, key, key->tweak, txtlen);
 }

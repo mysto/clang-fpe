@@ -54,7 +54,7 @@ void num2str(const BIGNUM *X, unsigned int *Y, unsigned int radix, int len, BN_C
     return;
 }
 
-void FF1_encrypt(const unsigned int *in, unsigned int *out, FPE_KEY *key, const unsigned char *tweak, size_t inlen, size_t tweaklen)
+void FF1_encrypt(const unsigned int *plaintext, unsigned int *ciphertext, FPE_KEY *key, const unsigned char *tweak, size_t txtlen, size_t tweaklen)
 {
     BIGNUM *bnum = BN_new(),
            *y = BN_new(),
@@ -69,10 +69,15 @@ void FF1_encrypt(const unsigned int *in, unsigned int *out, FPE_KEY *key, const 
         char little;
     } is_endian = { 1 };
 
-    memcpy(out, in, inlen << 2);
-    int u = floor2(inlen, 1);
-    int v = inlen - u;
-    unsigned int *A = out, *B = out + u;
+    // Calculate split point
+    int u = floor2(txtlen, 1);
+    int v = txtlen - u;
+
+    // Split the message
+    memcpy(ciphertext, plaintext, txtlen << 2);
+    unsigned int *A = ciphertext;
+    unsigned int *B = ciphertext + u;
+
     pow_uv(qpow_u, qpow_v, key->radix, u, v, ctx);
 
     unsigned int temp = (unsigned int)ceil(v * log2(key->radix));
@@ -95,17 +100,17 @@ void FF1_encrypt(const unsigned int *in, unsigned int *out, FPE_KEY *key, const 
         P[4] = (temp >> 16) & 0xff;
         P[5] = (temp >> 8) & 0xff;
         P[6] = temp & 0xff;
-        P[8] = (inlen >> 24) & 0xff;
-        P[9] = (inlen >> 16) & 0xff;
-        P[10] = (inlen >> 8) & 0xff;
-        P[11] = inlen & 0xff;
+        P[8] = (txtlen >> 24) & 0xff;
+        P[9] = (txtlen >> 16) & 0xff;
+        P[10] = (txtlen >> 8) & 0xff;
+        P[11] = txtlen & 0xff;
         P[12] = (tweaklen >> 24) & 0xff;
         P[13] = (tweaklen >> 16) & 0xff;
         P[14] = (tweaklen >> 8) & 0xff;
         P[15] = tweaklen & 0xff;
     } else {
         *( (unsigned int *)(P + 3) ) = (key->radix << 8) | 10;
-        *( (unsigned int *)(P + 8) ) = inlen;
+        *( (unsigned int *)(P + 8) ) = txtlen;
         *( (unsigned int *)(P + 12) ) = tweaklen;
     }
 
@@ -124,7 +129,7 @@ void FF1_encrypt(const unsigned int *in, unsigned int *out, FPE_KEY *key, const 
 
         // i
         Q[tweaklen + pad] = i & 0xff;
-        str2num(bnum, B, key->radix, inlen - m, ctx);
+        str2num(bnum, B, key->radix, txtlen - m, ctx);
         int BytesLen = BN_bn2bin(bnum, Bytes);
         memset(Q + Qlen - b, 0x00, b);
 
@@ -197,7 +202,7 @@ void FF1_encrypt(const unsigned int *in, unsigned int *out, FPE_KEY *key, const 
     return;
 }
 
-void FF1_decrypt(const unsigned int *in, unsigned int *out, FPE_KEY *key, const unsigned char *tweak, size_t inlen, size_t tweaklen)
+void FF1_decrypt(const unsigned int *ciphertext, unsigned int *plaintext, FPE_KEY *key, const unsigned char *tweak, size_t txtlen, size_t tweaklen)
 {
     BIGNUM *bnum = BN_new(),
            *y = BN_new(),
@@ -212,10 +217,13 @@ void FF1_decrypt(const unsigned int *in, unsigned int *out, FPE_KEY *key, const 
         char little;
     } is_endian = { 1 };
 
-    memcpy(out, in, inlen << 2);
-    int u = floor2(inlen, 1);
-    int v = inlen - u;
-    unsigned int *A = out, *B = out + u;
+    // Calculate split point
+    int u = floor2(txtlen, 1);
+    int v = txtlen - u;
+
+    // Split the message
+    memcpy(plaintext, ciphertext, txtlen << 2);
+    unsigned int *A = plaintext, *B = plaintext + u;
     pow_uv(qpow_u, qpow_v, key->radix, u, v, ctx);
 
     unsigned int temp = (unsigned int)ceil(v * log2(key->radix));
@@ -237,17 +245,17 @@ void FF1_decrypt(const unsigned int *in, unsigned int *out, FPE_KEY *key, const 
         P[4] = (temp >> 16) & 0xff;
         P[5] = (temp >> 8) & 0xff;
         P[6] = temp & 0xff;
-        P[8] = (inlen >> 24) & 0xff;
-        P[9] = (inlen >> 16) & 0xff;
-        P[10] = (inlen >> 8) & 0xff;
-        P[11] = inlen & 0xff;
+        P[8] = (txtlen >> 24) & 0xff;
+        P[9] = (txtlen >> 16) & 0xff;
+        P[10] = (txtlen >> 8) & 0xff;
+        P[11] = txtlen & 0xff;
         P[12] = (tweaklen >> 24) & 0xff;
         P[13] = (tweaklen >> 16) & 0xff;
         P[14] = (tweaklen >> 8) & 0xff;
         P[15] = tweaklen & 0xff;
     } else {
         *( (unsigned int *)(P + 3) ) = (key->radix << 8) | 10;
-        *( (unsigned int *)(P + 8) ) = inlen;
+        *( (unsigned int *)(P + 8) ) = txtlen;
         *( (unsigned int *)(P + 12) ) = tweaklen;
     }
 
@@ -266,7 +274,7 @@ void FF1_decrypt(const unsigned int *in, unsigned int *out, FPE_KEY *key, const 
 
         // i
         Q[tweaklen + pad] = i & 0xff;
-        str2num(anum, A, key->radix, inlen - m, ctx);
+        str2num(anum, A, key->radix, txtlen - m, ctx);
         memset(Q + Qlen - b, 0x00, b);
         int BytesLen = BN_bn2bin(anum, Bytes);
         int qtmp = Qlen - BytesLen;
@@ -357,12 +365,12 @@ void FPE_delete_ff1_key(FPE_KEY *key)
     OPENSSL_free(key->tweak);
 }
 
-void FPE_ff1_encrypt(unsigned int *in, unsigned int *out, unsigned int inlen, FPE_KEY *key)
+void FPE_ff1_encrypt(unsigned int *plaintext, unsigned int *ciphertext, unsigned int txtlen, FPE_KEY *key)
 {
-    FF1_encrypt(in, out, key, key->tweak, inlen, key->tweaklen);
+    FF1_encrypt(plaintext, ciphertext, key, key->tweak, txtlen, key->tweaklen);
 }
 
-void FPE_ff1_decrypt(unsigned int *in, unsigned int *out, unsigned int inlen, FPE_KEY *key)
+void FPE_ff1_decrypt(unsigned int *plaintext, unsigned int *ciphertext, unsigned int txtlen, FPE_KEY *key)
 {
-    FF1_decrypt(in, out, key, key->tweak, inlen, key->tweaklen);
+    FF1_decrypt(plaintext, ciphertext, key, key->tweak, txtlen, key->tweaklen);
 }

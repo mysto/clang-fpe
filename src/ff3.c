@@ -245,7 +245,7 @@ int create_ff3_key(const unsigned char *userKey, const int bits, const unsigned 
     return ret;
 }
 
-int FPE_create_ff3_key(const char *key, const char *tweak, unsigned int radix, FPE_KEY *keystruct)
+FPE_KEY* FPE_create_ff3_key(const char *key, const char *tweak, unsigned int radix)
 {
     unsigned char k[100],
                   t[100];
@@ -254,7 +254,9 @@ int FPE_create_ff3_key(const char *key, const char *tweak, unsigned int radix, F
     hex2chars(key, k);
     hex2chars(tweak, t);
 
-    return create_ff3_key(k,klen*8,t,radix,keystruct);
+    FPE_KEY *keystruct  = (FPE_KEY *)OPENSSL_malloc(sizeof(FPE_KEY));
+    create_ff3_key(k,klen*8,t,radix,keystruct);
+    return keystruct;
 }
 
 
@@ -282,7 +284,7 @@ int create_ff3_1_key(const unsigned char *userKey, const int bits, const unsigne
     return ret;
 }
 
-int FPE_create_ff3_1_key(const char *key, const char *tweak, unsigned int radix, FPE_KEY *keystruct)
+FPE_KEY* FPE_create_ff3_1_key(const char *key, const char *tweak, unsigned int radix)
 {
     unsigned char k[100],
                   t[100];
@@ -294,19 +296,15 @@ int FPE_create_ff3_1_key(const char *key, const char *tweak, unsigned int radix,
     //display_as_hex("key", k, klen);
     //display_as_hex("tweak", t, 56);
 
-    return create_ff3_1_key(k,klen*8,t,radix,keystruct);
+    FPE_KEY *keystruct  = (FPE_KEY *)OPENSSL_malloc(sizeof(FPE_KEY));
+    create_ff3_1_key(k,klen*8,t,radix,keystruct);
+    return keystruct;
 }
-
-void delete_ff3_key(FPE_KEY *key)
-{
-    OPENSSL_free(key->tweak);
-    OPENSSL_free(key);
-}
-
 
 void FPE_delete_ff3_key(FPE_KEY *key)
 {
     OPENSSL_free(key->tweak);
+    OPENSSL_free(key);
 }
 
 void FPE_ff3_encrypt(unsigned int *in, unsigned int *out, unsigned int txtlen, FPE_KEY *key)

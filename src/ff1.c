@@ -360,7 +360,7 @@ int create_ff1_key(const unsigned char *userKey, const int bits, const unsigned 
     return ret;
 }
 
-int FPE_create_ff1_key(const char *key, const char *tweak, unsigned int radix, FPE_KEY *keystruct)
+FPE_KEY* FPE_create_ff1_key(const char *key, const char *tweak, unsigned int radix)
 {
     unsigned char k[100],
                   t[100];
@@ -369,12 +369,16 @@ int FPE_create_ff1_key(const char *key, const char *tweak, unsigned int radix, F
 
     hex2chars(key, k);
     hex2chars(tweak, t);
-    return create_ff1_key(k,klen*8,t,tlen,radix,keystruct);
+
+    FPE_KEY *keystruct  = (FPE_KEY *)OPENSSL_malloc(sizeof(FPE_KEY));
+    create_ff1_key(k,klen*8,t,tlen,radix,keystruct);
+    return keystruct;
 }
 
 void FPE_delete_ff1_key(FPE_KEY *key)
 {
     OPENSSL_free(key->tweak);
+    OPENSSL_free(key);
 }
 
 void FPE_ff1_encrypt(unsigned int *plaintext, unsigned int *ciphertext, unsigned int txtlen, FPE_KEY *key)

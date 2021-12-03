@@ -60,7 +60,7 @@ void FPE_delete_ff1_key(FPE_KEY *key);
 | key  | encryption key (128 bit, 192 bits or 256 bits), represented as a c string |
 | tweak    | tweak, represented as a c string         |
 | radix    | number of characters in the given alphabet, it must be in [2, 2^16] |
-| keystruct      | FPE_KEY structure                        |
+| returns | FPE_KEY structure                        |
 
 2. encrypt or decrypt text using FF1 algorithm
 
@@ -89,7 +89,8 @@ void FPE_delete_ff3_key(FPE_KEY *key);
 | ------- | ---------------------------------------- |
 | key | encryption key (128 bit, 192 bits or 256 bits), represented as a c string |
 | tweak   | tweak, represented as a c string (it must be 64 bytes) |
-| keystruct     | FPE_KEY structure                        |
+| radix    | number of characters in the given alphabet, it must be in [2, 2^16] |
+| returns | FPE_KEY structure                        |
 
 4. encrypt or decrypt text using FF3 algorithm
 

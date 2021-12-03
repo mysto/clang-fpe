@@ -50,7 +50,7 @@ There are several functions for FF1 and FF3 algorithm, respectively.
 1. Create and delete FF1 key and tweak
 
 ```c
-int FPE_create_ff1_key(const char *key, const char *tweak, const unsigned int radix, FPE_KEY *key);
+int FPE_create_ff1_key(const char *key, const char *tweak, const unsigned int radix, FPE_KEY *keystruct);
 
 void FPE_delete_ff1_key(FPE_KEY *key);
 ```
@@ -79,8 +79,8 @@ void FPE_ff1_derypt(unsigned int *plaintext, unsigned int *ciphertext, unsigned 
 3. Create and delete FF3 key and tweak
 
 ```c
-int FPE_create_ff3_key(const char *userKey, const char *tweak, const unsigned char radix, FPE_KEY *key);
-int FPE_create_ff3_1_key(const char *userKey, const char *tweak, const unsigned char radix, FPE_KEY *key);
+int FPE_create_ff3_key(const char *userKey, const char *tweak, const unsigned char radix, FPE_KEY *keystruct);
+int FPE_create_ff3_1_key(const char *userKey, const char *tweak, const unsigned char radix, FPE_KEY *keystruct);
 
 void FPE_delete_ff3_key(FPE_KEY *key);
 ```

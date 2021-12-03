@@ -75,3 +75,9 @@ void inverse_map_chars(unsigned result[], unsigned char str[], int len)
     str[len] = 0x00;
 }
 
+void display_as_hex(char* name, unsigned char *val, unsigned int vlen) 
+{
+    printf("%s:",name);
+    for (int i = 0; i < vlen; ++i)    printf(" %02x", val[i]);
+    puts("");
+}

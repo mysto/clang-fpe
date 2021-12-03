@@ -14,6 +14,7 @@ void map_chars(char str[], unsigned int result[]);
 void inverse_map_chars(unsigned result[], unsigned char str[], int len);
 void hex2chars(const char hex[], unsigned char result[]);
 
+void display_as_hex(char *name, unsigned char *k, unsigned int klen);
 //int log2(int x);
 
 #endif

@@ -253,6 +253,7 @@ int FPE_create_ff3_key(const char *key, const char *tweak, unsigned int radix, F
 
     hex2chars(key, k);
     hex2chars(tweak, t);
+
     return create_ff3_key(k,klen*8,t,radix,keystruct);
 }
 
@@ -289,6 +290,10 @@ int FPE_create_ff3_1_key(const char *key, const char *tweak, unsigned int radix,
 
     hex2chars(key, k);
     hex2chars(tweak, t);
+
+    //display_as_hex("key", k, klen);
+    //display_as_hex("tweak", t, 56);
+
     return create_ff3_1_key(k,klen*8,t,radix,keystruct);
 }
 

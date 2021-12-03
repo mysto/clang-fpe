@@ -50,19 +50,17 @@ There are several functions for FF1 and FF3 algorithm, respectively.
 1. Create and delete FF1 key and tweak
 
 ```c
-int FPE_create_ff1_key(const unsigned char *userKey, const int bits, const unsigned char *tweak, const unsigned int tweaklen, const unsigned int radix, FPE_KEY *key);
+int FPE_create_ff1_key(const char *key, const char *tweak, const unsigned int radix, FPE_KEY *key);
 
 void FPE_delete_ff1_key(FPE_KEY *key);
 ```
 
 | name     | description                              |
 | -------- | ---------------------------------------- |
-| userKey  | encryption key (128 bit, 192 bits or 256 bits), represented as a c string |
-| bits     | length of userKey (128, 192 or 256)      |
+| key  | encryption key (128 bit, 192 bits or 256 bits), represented as a c string |
 | tweak    | tweak, represented as a c string         |
-| tweaklen | the byte length of the tweak             |
 | radix    | number of characters in the given alphabet, it must be in [2, 2^16] |
-| key      | FPE_KEY structure                        |
+| keystruct      | FPE_KEY structure                        |
 
 2. encrypt or decrypt text using FF1 algorithm
 
@@ -76,23 +74,22 @@ void FPE_ff1_derypt(unsigned int *plaintext, unsigned int *ciphertext, unsigned 
 | plaintext  | numeral string to be encrypted, represented as an array of integers |
 | ciphertext | encrypted numeral string, represented as an array of integers |
 | txtlen | the length of input numeral string (in)  |
-| key   | FPE_KEY structure that has been set with key and tweak |
+| keystruct   | FPE_KEY structure that has been set with key and tweak |
 
 3. Create and delete FF3 key and tweak
 
 ```c
-int FPE_create_ff3_key(const unsigned char *userKey, const int bits, const unsigned char *tweak, const unsigned char radix, FPE_KEY *key);
-int FPE_create_ff3_1_key(const unsigned char *userKey, const int bits, const unsigned char *tweak, const unsigned char radix, FPE_KEY *key);
+int FPE_create_ff3_key(const char *userKey, const char *tweak, const unsigned char radix, FPE_KEY *key);
+int FPE_create_ff3_1_key(const char *userKey, const char *tweak, const unsigned char radix, FPE_KEY *key);
 
 void FPE_delete_ff3_key(FPE_KEY *key);
 ```
 
 | name    | description                              |
 | ------- | ---------------------------------------- |
-| userKey | encryption key (128 bit, 192 bits or 256 bits), represented as a c string |
-| bits    | length of userKey (128, 192 or 256)      |
+| key | encryption key (128 bit, 192 bits or 256 bits), represented as a c string |
 | tweak   | tweak, represented as a c string (it must be 64 bytes) |
-| key     | FPE_KEY structure                        |
+| keystruct     | FPE_KEY structure                        |
 
 4. encrypt or decrypt text using FF3 algorithm
 
@@ -107,7 +104,7 @@ void FPE_ff3_decrypt(unsigned int *plaintext, unsigned int *ciphertext, unsigned
 | ciphertext | encrypted numeral string, represented as an array of integers |
 | txtlen | the length of input numeral string (in)  |
 | radix | number of characters in the given alphabet, it must be in [2, 2^16] |
-| key   | FPE_KEY structure that has been set with key and tweak |
+| keystruct   | FPE_KEY structure that has been set with key and tweak |
 
 ## TODO
 

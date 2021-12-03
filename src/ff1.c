@@ -345,7 +345,7 @@ void FF1_decrypt(const unsigned int *ciphertext, unsigned int *plaintext, FPE_KE
     return;
 }
 
-int FPE_create_ff1_key(const unsigned char *userKey, const int bits, const unsigned char *tweak, const unsigned int tweaklen, const unsigned int radix, FPE_KEY *key)
+int create_ff1_key(const unsigned char *userKey, const int bits, const unsigned char *tweak, const unsigned int tweaklen, const unsigned int radix, FPE_KEY *key)
 {
     int ret;
     if (bits != 128 && bits != 192 && bits != 256) {
@@ -358,6 +358,18 @@ int FPE_create_ff1_key(const unsigned char *userKey, const int bits, const unsig
     ret = AES_set_encrypt_key(userKey, bits, &key->aes_enc_ctx);
     key->radix = radix;
     return ret;
+}
+
+int FPE_create_ff1_key(const char *key, const char *tweak, unsigned int radix, FPE_KEY *keystruct)
+{
+    unsigned char k[100],
+                  t[100];
+    int klen = strlen(key) / 2;
+    int tlen = strlen(tweak) / 2;
+
+    hex2chars(key, k);
+    hex2chars(tweak, t);
+    return create_ff1_key(k,klen*8,t,tlen,radix,keystruct);
 }
 
 void FPE_delete_ff1_key(FPE_KEY *key)

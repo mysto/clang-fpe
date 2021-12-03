@@ -226,7 +226,7 @@ void FF3_decrypt(unsigned int *ciphertext, unsigned int *plaintext, FPE_KEY *key
     return;
 }
 
-int FPE_create_ff3_key(const unsigned char *userKey, const int bits, const unsigned char *tweak, unsigned int radix, FPE_KEY *key)
+int create_ff3_key(const unsigned char *userKey, const int bits, const unsigned char *tweak, unsigned int radix, FPE_KEY *key)
 {
     int ret;
     if (bits != 128 && bits != 192 && bits != 256) {
@@ -245,7 +245,19 @@ int FPE_create_ff3_key(const unsigned char *userKey, const int bits, const unsig
     return ret;
 }
 
-int FPE_create_ff3_1_key(const unsigned char *userKey, const int bits, const unsigned char *tweak, unsigned int radix, FPE_KEY *key)
+int FPE_create_ff3_key(const char *key, const char *tweak, unsigned int radix, FPE_KEY *keystruct)
+{
+    unsigned char k[100],
+                  t[100];
+    int klen = strlen(key) / 2;
+
+    hex2chars(key, k);
+    hex2chars(tweak, t);
+    return create_ff3_key(k,klen*8,t,radix,keystruct);
+}
+
+
+int create_ff3_1_key(const unsigned char *userKey, const int bits, const unsigned char *tweak, unsigned int radix, FPE_KEY *key)
 {
     int ret;
     if (bits != 128 && bits != 192 && bits != 256) {
@@ -268,6 +280,24 @@ int FPE_create_ff3_1_key(const unsigned char *userKey, const int bits, const uns
     ret = AES_set_encrypt_key(tmp, bits, &key->aes_enc_ctx);
     return ret;
 }
+
+int FPE_create_ff3_1_key(const char *key, const char *tweak, unsigned int radix, FPE_KEY *keystruct)
+{
+    unsigned char k[100],
+                  t[100];
+    int klen = strlen(key) / 2;
+
+    hex2chars(key, k);
+    hex2chars(tweak, t);
+    return create_ff3_1_key(k,klen*8,t,radix,keystruct);
+}
+
+void delete_ff3_key(FPE_KEY *key)
+{
+    OPENSSL_free(key->tweak);
+    OPENSSL_free(key);
+}
+
 
 void FPE_delete_ff3_key(FPE_KEY *key)
 {

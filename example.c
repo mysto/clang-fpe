@@ -12,18 +12,19 @@ int main(int argc, char *argv[])
         return 0;
     }
 
-    unsigned char k[100],
-                  t[100],
-                  result[100];
-    int xlen = strlen(argv[4]),
-        klen = strlen(argv[1]) / 2,
-        tlen = strlen(argv[2]) / 2,
-        radix = atoi(argv[3]);
+    unsigned char result[100];
+
+    char* key = argv[1];
+    char* tweak = argv[2];
+    char* plaintext = argv[4];
+    int radix = atoi(argv[3]);
+
+    int xlen = strlen(plaintext),
+        tlen = strlen(tweak) / 2;
+
     unsigned int x[100],
                  y[xlen];
 
-    hex2chars(argv[1], k);
-    hex2chars(argv[2], t);
     map_chars(argv[4], x);
 
     for (int i = 0; i < xlen; ++i)
@@ -31,18 +32,18 @@ int main(int argc, char *argv[])
 
     FPE_KEY ff1, ff3;
 
-    printf("key:");
-    for (int i = 0; i < klen; ++i)    printf(" %02x", k[i]);
-    puts("");
-    if (tlen)    printf("tweak:");
-    for (int i = 0; i < tlen; ++i)    printf(" %02x", t[i]);
-    if (tlen)    puts("");
+    //printf("key:");
+    //for (int i = 0; i < klen; ++i)    printf(" %02x", k[i]);
+    //puts("");
+    //if (tlen)    printf("tweak:");
+    //for (int i = 0; i < tlen; ++i)    printf(" %02x", t[i]);
+    //if (tlen)    puts("");
 
-    FPE_create_ff1_key(k, klen * 8, t, tlen, radix, &ff1);
+    FPE_create_ff1_key(key, tweak, radix, &ff1);
 	if (tlen == 7) {
-        FPE_create_ff3_1_key(k, klen * 8, t, radix, &ff3);
+        FPE_create_ff3_1_key(key, tweak, radix, &ff3);
 	} else {
-        FPE_create_ff3_key(k, klen * 8, t, radix, &ff3);
+        FPE_create_ff3_key(key, tweak, radix, &ff3);
     }
 
     printf("after map: ");

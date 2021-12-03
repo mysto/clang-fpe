@@ -12,6 +12,7 @@ void pow_uv(BIGNUM *pow_u, BIGNUM *pow_v, unsigned int x, int u, int v, BN_CTX *
 
 void map_chars(char str[], unsigned int result[]);
 void inverse_map_chars(unsigned result[], unsigned char str[], int len);
+void hex2chars(const char hex[], unsigned char result[]);
 
 //int log2(int x);
 

@@ -5,21 +5,6 @@
 #include <fpe.h>
 #include <fpe_locl.h>
 
-void hex2chars(char hex[], unsigned char result[])
-{
-    int len = strlen(hex);
-    char temp[3];
-    temp[2] = 0x00;
-
-    int j = 0;
-    for (int i = 0; i < len; i += 2) {
-        temp[0] = hex[i];
-        temp[1] = hex[i + 1];
-        result[j] = (char)strtol(temp, NULL, 16);
-        ++j;
-    }
-}
-
 int main(int argc, char *argv[])
 {
     if (argc != 5) {

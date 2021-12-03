@@ -38,6 +38,21 @@ void pow_uv(BIGNUM *pow_u, BIGNUM *pow_v, unsigned int x, int u, int v, BN_CTX *
     */
 }
 
+void hex2chars(const char hex[], unsigned char result[])
+{
+    int len = strlen(hex);
+    char temp[3];
+    temp[2] = 0x00;
+
+    int j = 0;
+    for (int i = 0; i < len; i += 2) {
+        temp[0] = hex[i];
+        temp[1] = hex[i + 1];
+        result[j] = (char)strtol(temp, NULL, 16);
+        ++j;
+    }
+}
+
 void map_chars(char str[], unsigned int result[])
 {
     int len = strlen(str);

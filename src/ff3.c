@@ -245,7 +245,7 @@ int create_ff3_key(const unsigned char *userKey, const int bits, const unsigned 
     return ret;
 }
 
-FPE_KEY* FPE_create_ff3_key(const char *key, const char *tweak, unsigned int radix)
+FPE_KEY* FPE_ff3_create_key(const char *key, const char *tweak, unsigned int radix)
 {
     unsigned char k[100],
                   t[100];
@@ -284,7 +284,7 @@ int create_ff3_1_key(const unsigned char *userKey, const int bits, const unsigne
     return ret;
 }
 
-FPE_KEY* FPE_create_ff3_1_key(const char *key, const char *tweak, unsigned int radix)
+FPE_KEY* FPE_ff3_1_create_key(const char *key, const char *tweak, unsigned int radix)
 {
     unsigned char k[100],
                   t[100];
@@ -301,7 +301,7 @@ FPE_KEY* FPE_create_ff3_1_key(const char *key, const char *tweak, unsigned int r
     return keystruct;
 }
 
-void FPE_delete_ff3_key(FPE_KEY *key)
+void FPE_ff3_delete_key(FPE_KEY *key)
 {
     OPENSSL_free(key->tweak);
     OPENSSL_free(key);

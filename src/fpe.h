@@ -21,18 +21,18 @@ struct fpe_key_st {
 typedef struct fpe_key_st FPE_KEY;
 
 /*** FF1 ***/
-FPE_KEY* FPE_create_ff1_key(const char *key, const char *tweak, unsigned int radix);
+FPE_KEY* FPE_ff1_create_key(const char *key, const char *tweak, unsigned int radix);
 
-void FPE_delete_ff1_key(FPE_KEY *key);
+void FPE_ff1_delete_key(FPE_KEY *key);
 
 void FPE_ff1_encrypt(unsigned int *plaintext, unsigned int *ciphertext, unsigned int txtlen, FPE_KEY *key);
 void FPE_ff1_decrypt(unsigned int *ciphertext, unsigned int *plaintext, unsigned int txtlen, FPE_KEY *key);
 
 /*** FF3 ***/
-FPE_KEY* FPE_create_ff3_key(const char *key, const char *tweak, unsigned int radix);
-FPE_KEY* FPE_create_ff3_1_key(const char *key, const char *tweak, unsigned int radix);
+FPE_KEY* FPE_ff3_create_key(const char *key, const char *tweak, unsigned int radix);
+FPE_KEY* FPE_ff3_1_create_key(const char *key, const char *tweak, unsigned int radix);
 
-void FPE_delete_ff3_key(FPE_KEY *key);
+void FPE_ff3_delete_key(FPE_KEY *key);
 
 void FPE_ff3_encrypt(unsigned int *plaintext, unsigned int *ciphertext, unsigned int inlen, FPE_KEY *key);
 void FPE_ff3_decrypt(unsigned int *ciphertext, unsigned int *plaintext, unsigned int inlen, FPE_KEY *key);

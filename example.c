@@ -32,10 +32,10 @@ int main(int argc, char *argv[])
     unsigned int x[100],
                  y[xlen];
 
-    FPE_KEY *ff1 = FPE_create_ff1_key(key, tweak, radix);
+    FPE_KEY *ff1 = FPE_ff1_create_key(key, tweak, radix);
 	FPE_KEY *ff3 = (tlen == 7) ? 
-                      FPE_create_ff3_1_key(key, tweak, radix) : 
-                      FPE_create_ff3_key(key, tweak, radix);
+                      FPE_ff3_1_create_key(key, tweak, radix) : 
+                      FPE_ff3_create_key(key, tweak, radix);
 
     map_chars(plaintext, x);
 
@@ -61,8 +61,8 @@ int main(int argc, char *argv[])
     memset(x, 0, sizeof(x));
     FPE_ff3_decrypt(y, x, xlen, ff3);
 
-    FPE_delete_ff1_key(ff1);
-    FPE_delete_ff3_key(ff3);
+    FPE_ff1_delete_key(ff1);
+    FPE_ff3_delete_key(ff3);
 
     return 0;
 }

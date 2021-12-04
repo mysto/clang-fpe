@@ -11,7 +11,7 @@
 void pow_uv(BIGNUM *pow_u, BIGNUM *pow_v, unsigned int x, int u, int v, BN_CTX *ctx);
 
 void map_chars(char str[], unsigned int result[]);
-void inverse_map_chars(unsigned result[], unsigned char str[], int len);
+void inverse_map_chars(unsigned int result[], char str[], int len);
 void hex2chars(const char hex[], unsigned char result[]);
 
 void display_as_hex(char *name, unsigned char *k, unsigned int klen);

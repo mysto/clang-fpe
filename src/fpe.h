@@ -34,8 +34,9 @@ FPE_KEY* FPE_ff3_1_create_key(const char *key, const char *tweak, unsigned int r
 
 void FPE_ff3_delete_key(FPE_KEY *key);
 
-void FPE_ff3_encrypt(unsigned int *plaintext, unsigned int *ciphertext, unsigned int inlen, FPE_KEY *key);
-void FPE_ff3_decrypt(unsigned int *ciphertext, unsigned int *plaintext, unsigned int inlen, FPE_KEY *key);
+void FPE_ff3_encrypt(char *plaintext, char *ciphertext, FPE_KEY *key);
+void FPE_ff3_decrypt(char *ciphertext, char *plaintext, FPE_KEY *key);
+//void FPE_ff3_decrypt(unsigned int *ciphertext, unsigned int *plaintext, unsigned int inlen, FPE_KEY *key);
 
 # ifdef __cplusplus
 }

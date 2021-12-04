@@ -307,12 +307,37 @@ void FPE_ff3_delete_key(FPE_KEY *key)
     OPENSSL_free(key);
 }
 
-void FPE_ff3_encrypt(unsigned int *in, unsigned int *out, unsigned int txtlen, FPE_KEY *key)
+void FPE_ff3_encrypt(char *plaintext, char *ciphertext, FPE_KEY *key)
 {
-    FF3_encrypt(in, out, key, key->tweak, txtlen);
+    int txtlen = strlen(plaintext);
+    unsigned int x[100],
+                 y[txtlen];
+    map_chars(plaintext, x);
+
+    //printf("plaintext: ");
+    //for (int i = 0; i < xlen; ++i)    printf(" %d", x[i]);
+    //printf("\n\n");
+
+    //FPE_ff3_xencrypt(x, y, txtlen, key);
+    FF3_encrypt(x, y, key, key->tweak, txtlen);
+
+    inverse_map_chars(y, ciphertext, txtlen);
+
+    //printf("FF3 ciphertext: %s\n\n", result);
 }
 
-void FPE_ff3_decrypt(unsigned int *in, unsigned int *out, unsigned int txtlen, FPE_KEY *key)
+void FPE_ff3_decrypt(char *ciphertext, char *plaintext, FPE_KEY *key)
+{
+    int txtlen = strlen(ciphertext);
+    unsigned int x[100],
+                 y[txtlen];
+    map_chars(ciphertext, x);
+
+    FF3_decrypt(x, y, key, key->tweak, txtlen);
+
+    inverse_map_chars(y, plaintext, txtlen);
+}
+/*void FPE_ff3_decrypt(unsigned int *in, unsigned int *out, unsigned int txtlen, FPE_KEY *key)
 {
     FF3_decrypt(in, out, key, key->tweak, txtlen);
-}
+}*/

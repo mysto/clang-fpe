@@ -64,7 +64,7 @@ void map_chars(char str[], unsigned int result[])
             result[i] = str[i] - '0';
 }
 
-void inverse_map_chars(unsigned result[], unsigned char str[], int len)
+void inverse_map_chars(unsigned int result[], char str[], int len)
 {
     for (int i = 0; i < len; ++i)
         if (result[i] < 10)

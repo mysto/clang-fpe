@@ -19,7 +19,7 @@ int main(int argc, char *argv[])
         return 0;
     }
 
-    unsigned char result[100];
+    char ciphertext[100];
 
     char* key = argv[1];
     char* tweak = argv[2];
@@ -48,18 +48,17 @@ int main(int argc, char *argv[])
 
     FPE_ff1_encrypt(x, y, xlen, ff1);
 
-    inverse_map_chars(y, result, xlen);
-    printf("FF1 ciphertext: %s\n\n", result);
+    inverse_map_chars(y, ciphertext, xlen);
+    printf("FF1 ciphertext: %s\n\n", ciphertext);
 
     memset(x, 0, sizeof(x));
     FPE_ff1_decrypt(y, x, xlen, ff1);
 
-    FPE_ff3_encrypt(x, y, xlen, ff3);
-    inverse_map_chars(y, result, xlen);
-    printf("FF3 ciphertext: %s\n\n", result);
+    FPE_ff3_encrypt(plaintext, ciphertext, ff3);
+    printf("FF3 ciphertext: %s\n\n", ciphertext);
 
     memset(x, 0, sizeof(x));
-    FPE_ff3_decrypt(y, x, xlen, ff3);
+    FPE_ff3_decrypt(ciphertext, plaintext, ff3);
 
     FPE_ff1_delete_key(ff1);
     FPE_ff3_delete_key(ff3);

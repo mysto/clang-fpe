@@ -52,7 +52,7 @@ There are several functions for FF1 and FF3 algorithm, respectively.
 ```c
 FPE_KEY* FPE_ff1_create_key(const char *key, const char *tweak, const unsigned int radix);
 
-void FPE_ff1_delete_key(FPE_KEY *key);
+void FPE_ff1_delete_key(FPE_KEY *keystruct);
 ```
 
 | name     | description                              |

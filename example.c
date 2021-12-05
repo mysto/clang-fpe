@@ -20,44 +20,34 @@ int main(int argc, char *argv[])
     }
 
     char ciphertext[100];
+    char resulttext[100];
 
     char* key = argv[1];
     char* tweak = argv[2];
     char* plaintext = argv[4];
     int radix = atoi(argv[3]);
 
-    int xlen = strlen(plaintext),
+    int txtlen = strlen(plaintext),
         tlen = strlen(tweak) / 2;
-
-    unsigned int x[100],
-                 y[xlen];
 
     FPE_KEY *ff1 = FPE_ff1_create_key(key, tweak, radix);
 	FPE_KEY *ff3 = (tlen == 7) ? 
                       FPE_ff3_1_create_key(key, tweak, radix) : 
                       FPE_ff3_create_key(key, tweak, radix);
 
-    map_chars(plaintext, x);
+    //for (int i = 0; i < xlen; ++i)
+    //    assert(x[i] < radix);
 
-    for (int i = 0; i < xlen; ++i)
-        assert(x[i] < radix);
-
-    printf("plaintext: ");
-    for (int i = 0; i < xlen; ++i)    printf(" %d", x[i]);
-    printf("\n\n");
-
-    FPE_ff1_encrypt(x, y, xlen, ff1);
-
-    inverse_map_chars(y, ciphertext, xlen);
+    FPE_ff1_encrypt(plaintext, ciphertext, ff1);
     printf("FF1 ciphertext: %s\n\n", ciphertext);
 
-    memset(x, 0, sizeof(x));
-    FPE_ff1_decrypt(y, x, xlen, ff1);
+    memset(resulttext, 0, txtlen);
+    FPE_ff1_decrypt(ciphertext, resulttext, ff1);
 
     FPE_ff3_encrypt(plaintext, ciphertext, ff3);
     printf("FF3 ciphertext: %s\n\n", ciphertext);
 
-    memset(x, 0, sizeof(x));
+    memset(resulttext, 0, txtlen);
     FPE_ff3_decrypt(ciphertext, plaintext, ff3);
 
     FPE_ff1_delete_key(ff1);

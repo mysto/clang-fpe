@@ -25,8 +25,10 @@ FPE_KEY* FPE_ff1_create_key(const char *key, const char *tweak, unsigned int rad
 
 void FPE_ff1_delete_key(FPE_KEY *key);
 
-void FPE_ff1_encrypt(unsigned int *plaintext, unsigned int *ciphertext, unsigned int txtlen, FPE_KEY *key);
-void FPE_ff1_decrypt(unsigned int *ciphertext, unsigned int *plaintext, unsigned int txtlen, FPE_KEY *key);
+void FPE_ff1_encrypt(char *plaintext, char *ciphertext, FPE_KEY *key);
+//void FPE_ff1_encrypt(unsigned int *plaintext, unsigned int *ciphertext, unsigned int txtlen, FPE_KEY *key);
+//void FPE_ff1_decrypt(unsigned int *ciphertext, unsigned int *plaintext, unsigned int txtlen, FPE_KEY *key);
+void FPE_ff1_decrypt(char *ciphertext, char *plaintext, FPE_KEY *key);
 
 /*** FF3 ***/
 FPE_KEY* FPE_ff3_create_key(const char *key, const char *tweak, unsigned int radix);

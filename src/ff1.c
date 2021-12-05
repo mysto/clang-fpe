@@ -381,12 +381,31 @@ void FPE_ff1_delete_key(FPE_KEY *key)
     OPENSSL_free(key);
 }
 
-void FPE_ff1_encrypt(unsigned int *plaintext, unsigned int *ciphertext, unsigned int txtlen, FPE_KEY *key)
+void FPE_ff1_encrypt(char *plaintext, char *ciphertext, FPE_KEY *key)
 {
-    FF1_encrypt(plaintext, ciphertext, key, key->tweak, txtlen, key->tweaklen);
+    int txtlen = strlen(plaintext);
+    unsigned int x[100],
+                 y[txtlen];
+    map_chars(plaintext, x);
+
+    printf("plaintext: ");
+    for (int i = 0; i < txtlen; ++i)    printf("%d", x[i]);
+    printf("\n\n");
+
+    FF1_encrypt(x, y, key, key->tweak, txtlen, key->tweaklen);
+
+    inverse_map_chars(y, ciphertext, txtlen);
 }
 
-void FPE_ff1_decrypt(unsigned int *plaintext, unsigned int *ciphertext, unsigned int txtlen, FPE_KEY *key)
+void FPE_ff1_decrypt(char *ciphertext, char* plaintext, FPE_KEY *key) 
 {
-    FF1_decrypt(plaintext, ciphertext, key, key->tweak, txtlen, key->tweaklen);
+    int txtlen = strlen(ciphertext);
+    unsigned int x[100],
+                 y[txtlen];
+    map_chars(ciphertext, x);
+
+    FF1_decrypt(x, y, key, key->tweak, txtlen, key->tweaklen);
+
+    inverse_map_chars(y, plaintext, txtlen);
 }
+

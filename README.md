@@ -65,24 +65,23 @@ void FPE_ff1_delete_key(FPE_KEY *key);
 2. encrypt or decrypt text using FF1 algorithm
 
 ```c
-void FPE_ff1_encrypt(unsigned int *plaintext, unsigned int *ciphertext, unsigned int txtlen, FPE_KEY *key)
-void FPE_ff1_derypt(unsigned int *plaintext, unsigned int *ciphertext, unsigned int txtlen, FPE_KEY *key)
+void FPE_ff1_encrypt(char *plaintext, char *ciphertext, FPE_KEY *keystruct)
+void FPE_ff1_decrypt(char *ciphertext, char *plaintext, FPE_KEY *keystruct)
 ```
 
 | name  | description                              |
 | ----- | ---------------------------------------- |
 | plaintext  | numeral string to be encrypted, represented as an array of integers |
 | ciphertext | encrypted numeral string, represented as an array of integers |
-| txtlen | the length of input numeral string (in)  |
 | keystruct   | FPE_KEY structure that has been set with key and tweak |
 
 3. Create and delete FF3 key and tweak
 
 ```c
-FPE_KEY* FPE_ff3_create_key(const char *userKey, const char *tweak, const unsigned char radix);
-FPE_KEY* FPE_ff3_1_create_key(const char *userKey, const char *tweak, const unsigned char radix);
+FPE_KEY* FPE_ff3_create_key(const char *key, const char *tweak, const unsigned char radix);
+FPE_KEY* FPE_ff3_1_create_key(const char *key, const char *tweak, const unsigned char radix);
 
-void FPE_ff3_delete_key(FPE_KEY *key);
+void FPE_ff3_delete_key(FPE_KEY *keystruct);
 ```
 
 | name    | description                              |
@@ -95,15 +94,14 @@ void FPE_ff3_delete_key(FPE_KEY *key);
 4. encrypt or decrypt text using FF3 algorithm
 
 ```c
-void FPE_ff3_encrypt(unsigned int *plaintext, unsigned int *ciphertext, unsigned int inlen, FPE_KEY *key);
-void FPE_ff3_decrypt(unsigned int *plaintext, unsigned int *ciphertext, unsigned int inlen, FPE_KEY *key);
+void FPE_ff3_encrypt(char *plaintext, char *ciphertext, FPE_KEY *keystruct);
+void FPE_ff3_decrypt(char *ciphertext, char *plaintext, FPE_KEY *keystruct);
 ```
 
 | name  | description                              |
 | ----- | ---------------------------------------- |
 | plaintext  | numeral string to be encrypted, represented as an array of integers |
 | ciphertext | encrypted numeral string, represented as an array of integers |
-| txtlen | the length of input numeral string (in)  |
 | radix | number of characters in the given alphabet, it must be in [2, 2^16] |
 | keystruct   | FPE_KEY structure that has been set with key and tweak |
 

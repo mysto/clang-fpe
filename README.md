@@ -1,6 +1,14 @@
 [![Build Status](https://app.travis-ci.com/mysto/clang-fpe.svg?branch=master)](https://app.travis-ci.com/mysto/clang-fpe)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
+<p align="center">
+  <a href="https://privacylogistics.com/">
+    <img
+      alt="Mysto"
+      src="https://privacylogistics.com/Mysto-logo.jpg"
+    />
+  </a>
+</p>
 
 # FPE - Format Preserving Encryption Implementation in C
 

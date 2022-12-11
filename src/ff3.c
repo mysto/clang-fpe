@@ -303,8 +303,8 @@ FPE_KEY* FPE_ff3_1_create_key(const char *key, const char *tweak, unsigned int r
 
 void FPE_ff3_delete_key(FPE_KEY *key)
 {
-    OPENSSL_free(key->tweak);
-    OPENSSL_free(key);
+    OPENSSL_clear_free(key->tweak,strlen(key->tweak));
+    OPENSSL_clear_free(key,srtlen(key));
 }
 
 void FPE_ff3_encrypt(char *plaintext, char *ciphertext, FPE_KEY *key)

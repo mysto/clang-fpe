@@ -4,6 +4,7 @@
 #include <assert.h>
 #include <openssl/aes.h>
 #include <openssl/bn.h>
+#include <openssl/crypto.h>
 #include "fpe.h"
 #include "fpe_locl.h"
 

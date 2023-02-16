@@ -43,12 +43,14 @@ int main(int argc, char *argv[])
 
     memset(resulttext, 0, txtlen);
     FPE_ff1_decrypt(ciphertext, resulttext, ff1);
+    printf("FF1 decrypted: %s\n\n", resulttext);
 
     FPE_ff3_encrypt(plaintext, ciphertext, ff3);
     printf("FF3 ciphertext: %s\n\n", ciphertext);
 
     memset(resulttext, 0, txtlen);
-    FPE_ff3_decrypt(ciphertext, plaintext, ff3);
+    FPE_ff3_decrypt(ciphertext, resulttext, ff3);
+    printf("FF3 decrypted: %s\n\n", resulttext);
 
     FPE_ff1_delete_key(ff1);
     FPE_ff3_delete_key(ff3);

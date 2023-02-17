@@ -26,7 +26,7 @@ libfpe.so: $(OBJS)
 	cc -shared -fPIC -Wl,-soname,libfpe.so $(OBJS) $(SO_LINKS) -o $@
 endif
 
-.PHONY = all clean
+.PHONY = all clean install
 
 src/ff1.o: src/ff1.c
 	cc $(CFLAGS) -c src/ff1.c -o $@
@@ -50,3 +50,6 @@ test:
 clean:
 	rm $(OBJS) $(EXAMPLE_EXE) $(LIB)
 
+install:
+	cp libfpe.so /usr/local/lib
+	cp src/*.h /usr/local/include

@@ -162,8 +162,8 @@ void FF3_decrypt(unsigned int *ciphertext, unsigned int *plaintext, FPE_KEY *key
     int v = txtlen - u;
 
     // Split the message
-    unsigned int *A = ciphertext;
-    unsigned int *B = ciphertext + u;
+    unsigned int *A = plaintext;
+    unsigned int *B = plaintext + u;
 
     pow_uv(qpow_u, qpow_v, key->radix, u, v, ctx);
     unsigned int temp = (unsigned int)ceil(u * log2(key->radix));

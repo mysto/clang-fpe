@@ -39,18 +39,18 @@ int main(int argc, char *argv[])
     //    assert(x[i] < radix);
 
     FPE_ff1_encrypt(plaintext, ciphertext, ff1);
-    printf("FF1 ciphertext: %s\n\n", ciphertext);
+    printf("FF1 ciphertext: %s\n", ciphertext);
 
     memset(resulttext, 0, txtlen);
     FPE_ff1_decrypt(ciphertext, resulttext, ff1);
-    printf("FF1 decrypted: %s\n\n", resulttext);
+    printf("FF1 decrypted:  %s\n\n", resulttext);
 
     FPE_ff3_encrypt(plaintext, ciphertext, ff3);
-    printf("FF3 ciphertext: %s\n\n", ciphertext);
+    printf("FF3 ciphertext: %s\n", ciphertext);
 
     memset(resulttext, 0, txtlen);
     FPE_ff3_decrypt(ciphertext, resulttext, ff3);
-    printf("FF3 decrypted: %s\n\n", resulttext);
+    printf("FF3 decrypted:  %s\n\n", resulttext);
 
     FPE_ff1_delete_key(ff1);
     FPE_ff3_delete_key(ff3);

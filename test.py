@@ -301,6 +301,7 @@ class TestFPE(unittest.TestCase):
                 self.assertEqual(results, testVector['ciphertext'])
 
     def test_one(self):
+        print('starting')
         regexp = re.compile('(?<=ciphertext: )[a-zA-Z0-9]+')
 
         radix = 10

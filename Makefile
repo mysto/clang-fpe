@@ -20,22 +20,22 @@ libfpe.a: $(OBJS)
 
 ifeq ($(UNAME),Darwin)
 libfpe.dylib: $(OBJS)
-	cc -shared -fPIC -Wl,-install_name,libfpe.dylib $(OBJS) $(SO_LINKS) -o $@
+	gcc -shared -fPIC -Wl,-install_name,libfpe.dylib $(OBJS) $(SO_LINKS) -o $@
 else
 libfpe.so: $(OBJS)
-	cc -shared -fPIC -Wl,-soname,libfpe.so $(OBJS) $(SO_LINKS) -o $@
+	gcc -shared -fPIC -Wl,-soname,libfpe.so $(OBJS) $(SO_LINKS) -o $@
 endif
 
 .PHONY = all clean install
 
 src/ff1.o: src/ff1.c
-	cc $(CFLAGS) -c src/ff1.c -o $@
+	gcc $(CFLAGS) -c src/ff1.c -o $@
 
 src/ff3.o: src/ff3.c
-	cc $(CFLAGS) -c src/ff3.c -o $@
+	gcc $(CFLAGS) -c src/ff3.c -o $@
 
 src/fpe_locl.o: src/fpe_locl.c
-	cc $(CFLAGS) -c src/fpe_locl.c -o $@
+	gcc $(CFLAGS) -c src/fpe_locl.c -o $@
 
 $(EXAMPLE_EXE): $(EXAMPLE_SRC) $(LIB)
 ifeq ($(UNAME),Darwin)

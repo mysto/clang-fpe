@@ -302,12 +302,13 @@ class TestFPE(unittest.TestCase):
 
     def test_one(self):
         regexp = re.compile('(?<=ciphertext: )[a-zA-Z0-9]+')
-        test = ff1[0]   
-        radix = test[0]
-        key = test[1]
-        tweak = test[2]
-        plain = test[3]
-        cipher = test[4]
+
+        radix = 10
+        key = "2B7E151628AED2A6ABF7158809CF4F3C"
+        tweak = ""
+        plain = "0123456789"
+        cipher = "2433477484"
+
         p = subprocess.Popen(['./example', key, tweak, str(radix), plain], stdin = subprocess.PIPE, stdout = subprocess.PIPE)
         output = p.communicate()[0]
         results = regexp.findall(output.decode('utf-8'))[0]

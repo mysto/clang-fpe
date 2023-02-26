@@ -309,6 +309,8 @@ class TestFPE(unittest.TestCase):
         plain = "0123456789"
         cipher = "2433477484"
 
+        print(f'plaintext: {plain}')
+
         p = subprocess.Popen(['./example', key, tweak, str(radix), plain], stdin = subprocess.PIPE, stdout = subprocess.PIPE)
         output = p.communicate()[0]
         results = regexp.findall(output.decode('utf-8'))[0]

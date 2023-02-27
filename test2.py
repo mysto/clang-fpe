@@ -87,6 +87,9 @@ class TestFPE(unittest.TestCase):
 
         print(f'plaintext: {plain}')
 
+        p = subprocess.Popen(['./example', key, tweak, str(radix), plain], stdin = subprocess.PIPE, stdout = subprocess.PIPE)
+        output = p.communicate()[0]
+
         print(f'FF3 case #: 1')
         print(f'plaintext: {plain}')
         self.assertEqual("A", "A")

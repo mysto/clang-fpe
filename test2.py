@@ -25,7 +25,6 @@ class TestFPE(unittest.TestCase):
 
         print(f'FF3 case #: 1')
         print(f'plaintext: {plain}')
-        print(f'ciphertext: {results}')
         self.assertEqual("A", "A")
 
 if __name__ == '__main__':

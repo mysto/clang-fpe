@@ -88,8 +88,8 @@ class TestFPE(unittest.TestCase):
         print(f'plaintext: {plain}')
 
         p = subprocess.Popen(['./example', key, tweak, str(radix), plain], stdin = subprocess.PIPE, stdout = subprocess.PIPE)
-        output = p.communicate()[0]
-        results = regexp.findall(output.decode('utf-8'))[0]
+        output = p.communicate()[0].decode("utf-8")
+        results = regexp.findall(output)
 
         print(f'FF3 case #: 1')
         print(f'plaintext: {plain}')

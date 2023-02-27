@@ -45,7 +45,7 @@ else
 endif
 
 test:
-	python test.py
+	python test2.py
 
 clean:
 	rm $(OBJS) $(EXAMPLE_EXE) $(LIB)

@@ -86,9 +86,9 @@ class TestFPE(unittest.TestCase):
         cipher = "2433477484"
 
         print(f'plaintext: {plain}')
-
         p = subprocess.run(['./example', key, tweak, str(radix), plain], capture_output=True, text=True)
         output = p.stdout
+        print(len(output))
         results = regexp.findall(output)[0]
 
         print(f'FF3 case #: 1')

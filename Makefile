@@ -45,6 +45,7 @@ else
 endif
 
 test:
+    python --version
 	python test2.py
 
 clean:

@@ -87,9 +87,8 @@ class TestFPE(unittest.TestCase):
 
         print(f'plaintext: {plain}')
 
-        p = subprocess.run(['./example', key, tweak, str(radix), plain], capture_output=True)
-        output = p.stdout.decode("utf-8")
-        print("output:\n" + output)
+        p = subprocess.run(['./example', key, tweak, str(radix), plain], capture_output=True, text=True)
+        output = p.stdout
         results = regexp.findall(output)[0]
 
         print(f'FF3 case #: 1')

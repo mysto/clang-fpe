@@ -1,4 +1,4 @@
-[![Build Status](https://app.travis-ci.com/mysto/clang-fpe.svg?branch=master)](https://app.travis-ci.com/mysto/clang-fpe)
+[![Build Status](https://github.com/mysto/clang-fpe/actions/workflows/c-cpp.yml/badge.svg)](https://github.com/mysto/clang-fpe/actions)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
 <p align="center">

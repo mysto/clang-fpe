@@ -268,8 +268,8 @@ int create_ff3_1_key(const unsigned char *userKey, const int bits, const unsigne
         ret = -1;
         return ret;
     }
-    key->tweaklen = 64;
-    key->tweak = (unsigned char *)OPENSSL_malloc(8);
+    key->tweaklen = 56;
+    key->tweak = (unsigned char *)OPENSSL_malloc(7);
     memcpy(key->tweak, tweak, 7);
 	key->radix = radix;
 
@@ -305,7 +305,7 @@ FPE_KEY* FPE_ff3_1_create_key(const char *key, const char *tweak, unsigned int r
 void FPE_ff3_delete_key(FPE_KEY *key)
 {
     // zero out and then free the tweak and key values
-    OPENSSL_clear_free(key->tweak,key->tweaklen);
+    OPENSSL_clear_free(key->tweak,key->tweaklen/8);
     OPENSSL_clear_free(key,sizeof(key));
 }
 

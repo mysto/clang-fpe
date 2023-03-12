@@ -47,6 +47,7 @@ endif
 test:
 	python --version
 	./example
+	./example EF4359D8D580AA4F7F036D6F04FC6A94 D8E7920AFA330A73 10 890121234567890000
 	python test2.py
 
 clean:

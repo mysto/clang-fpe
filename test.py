@@ -302,7 +302,8 @@ class TestFPE(unittest.TestCase):
 
     def test_one(self):
         print('starting')
-        regexp = re.compile('(?<=ciphertext: )[a-zA-Z0-9]+')
+        cipher_regexp = re.compile('(?<=ciphertext: )[a-zA-Z0-9]+')
+        decrypt_regexp = re.compile('(?<=decrypted:  )[a-zA-Z0-9]+')
 
         radix = 10
         key = "2B7E151628AED2A6ABF7158809CF4F3C"
@@ -310,15 +311,16 @@ class TestFPE(unittest.TestCase):
         plain = "0123456789"
         cipher = "2433477484"
 
-        print(f'plaintext: {plain}')
-
-        p = subprocess.Popen(['./example', key, tweak, str(radix), plain], stdin = subprocess.PIPE, stdout = subprocess.PIPE)
-        output = p.communicate()[0]
-        results = regexp.findall(output.decode('utf-8'))[0]
+        p = subprocess.run(['./example', key, tweak, str(radix), plain], capture_output=True, text=True)
+        output = p.stdout
+        ciphertext = cipher_regexp.findall(output)[0]
+        decrypted  = decrypt_regexp.findall(output)[0]
         print(f'FF3 case #: 1')
         print(f'plaintext: {plain}')
-        print(f'ciphertext: {results}')
-        self.assertEqual(results, cipher)
+        print(f'ciphertext: {ciphertext}')
+        print(f'decrypted: {decrypted}')
+        self.assertEqual(ciphertext, cipher)
+        self.assertEqual(decrypted, plain)
 
 if __name__ == '__main__':
     unittest.main()

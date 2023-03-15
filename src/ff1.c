@@ -377,8 +377,8 @@ FPE_KEY* FPE_ff1_create_key(const char *key, const char *tweak, unsigned int rad
 
 void FPE_ff1_delete_key(FPE_KEY *key)
 {
-    OPENSSL_free(key->tweak);
-    OPENSSL_free(key);
+    OPENSSL_clear_free(key->tweak,key->tweaklen/8);
+    OPENSSL_clear_free(key,sizeof(key));
 }
 
 void FPE_ff1_encrypt(char *plaintext, char *ciphertext, FPE_KEY *key)

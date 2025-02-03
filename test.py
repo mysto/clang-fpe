@@ -250,10 +250,10 @@ testVectors_ACVP_AES_FF3_1 = [
 
 ]
 
-# Adapted from ACVP vectors for FF3-1 using 56-bit tweaks from private communication updating:
-# https://pages.nist.gov/ACVP/draft-celi-acvp-symmetric.html#name-test-groups
+# Loosely adapted from ACVP vector test cases in mysto/python-fpe:
+# https://github.com/mysto/python-fpe/blob/main/ff3/ff3_test.py
 
-testVectors_ACVP_AES_FF3_1_radix_62 = [
+testVectors_radix_62 = [
     # AES - 128
     {
         "radix": 62,

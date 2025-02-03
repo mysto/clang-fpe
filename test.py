@@ -353,7 +353,7 @@ class TestFPE(unittest.TestCase):
 
     def xest_encrypt_acvp_radix_62(self):
         regexp = re.compile('(?<=ciphertext: )[a-zA-Z0-9]+')
-        for testVector in testVectors_ACVP_AES_FF3_1_radix_62:
+        for testVector in testVectors_radix_62:
             with self.subTest(testVector=testVector):
                 p = subprocess.Popen(['./example', testVector['key'], testVector['tweak'], str(testVector['radix']), testVector['plaintext']], stdin = subprocess.PIPE, stdout = subprocess.PIPE)
                 output = p.communicate()[0]

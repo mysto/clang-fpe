@@ -250,6 +250,57 @@ testVectors_ACVP_AES_FF3_1 = [
 
 ]
 
+# Adapted from ACVP vectors for FF3-1 using 56-bit tweaks from private communication updating:
+# https://pages.nist.gov/ACVP/draft-celi-acvp-symmetric.html#name-test-groups
+
+testVectors_ACVP_AES_FF3_1_radix_62 = [
+    # AES - 128
+    {
+        "radix": 62,
+        "key": "AEE87D0D485B3AFD12BD1E0B9D03D50D",
+        "tweak": "5F9140601D224B",
+        "plaintext": "ixvuuIHr0e",
+        "ciphertext": "86gH2Pwy5y"
+    },
+    {
+        "radix": 62,
+        "key": "7B6C88324732F7F4AD435DA9AD77F917",
+        "tweak": "3F42102C0BAB39",
+        "plaintext": "21q1kbbIVSrAFtdFWzdMeIDpRqpo",
+        "ciphertext": "cJLGuBALkGa0AAhIMB6l3IXbjq9P"
+    },
+    # AES - 192
+    {
+        "radix": 62,
+        "key": "1C24B74B7C1B9969314CB53E92F98EFD620D5520017FB076",
+        "tweak": "0380341C425A6F",
+        "plaintext": "6np8r2t8zo",
+        "ciphertext": "LDB0GW0hFh"
+    },
+    {
+        "radix": 62,
+        "key": "C0ABADFC071379824A070E8C3FD40DD9BFD7A3C99A0D5FE3",
+        "tweak": "6C2926C705DDAF",
+        "plaintext": "GKB6sa9g56BSJ09iJ4dsaxRdsMvo",
+        "ciphertext": "eUJirBBwqIrxDXvPalKl8w8q1ajK"
+    },
+    # AES - 256
+    {
+        "radix": 62,
+        "key": "9C2B69F7DDF181C54398E345BE04C2F6B00B9DD1679200E1E04C4FF961AE0F09",
+        "tweak": "103C238B4B1E44",
+        "plaintext": "H2c6FblSA",
+        "ciphertext": "eV8s2hdAA"
+    },
+    {
+        "radix": 62,
+        "key": "C58BCBD08B90006CEC7E82B2D987D79F6A21111DEF0CEBB273CBAEB2D6CD4044",
+        "tweak": "7036604882667B",
+        "plaintext": "bz5TcS1krnD8IOLdrQeKzXkLAa6h",
+        "ciphertext": "UGuwjcZb32j8ev8R20rjtbEzrxSj"
+    }
+]
+
 class TestFPE(unittest.TestCase):
 
     def xest_vectors_ff1(self):
@@ -293,6 +344,16 @@ class TestFPE(unittest.TestCase):
     def xest_encrypt_acvp(self):
         regexp = re.compile('(?<=ciphertext: )[a-zA-Z0-9]+')
         for testVector in testVectors_ACVP_AES_FF3_1:
+            with self.subTest(testVector=testVector):
+                p = subprocess.Popen(['./example', testVector['key'], testVector['tweak'], str(testVector['radix']), testVector['plaintext']], stdin = subprocess.PIPE, stdout = subprocess.PIPE)
+                output = p.communicate()[0]
+                results = regexp.findall(output.decode('utf-8'))[1]
+                p.wait()
+                self.assertEqual(results, testVector['ciphertext'])
+
+    def xest_encrypt_acvp_radix_62(self):
+        regexp = re.compile('(?<=ciphertext: )[a-zA-Z0-9]+')
+        for testVector in testVectors_ACVP_AES_FF3_1_radix_62:
             with self.subTest(testVector=testVector):
                 p = subprocess.Popen(['./example', testVector['key'], testVector['tweak'], str(testVector['radix']), testVector['plaintext']], stdin = subprocess.PIPE, stdout = subprocess.PIPE)
                 output = p.communicate()[0]

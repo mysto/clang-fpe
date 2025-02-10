@@ -301,6 +301,18 @@ testVectors_FF3_1_radix_62 = [
     }
 ]
 
+
+testVectors_extras = [
+    {
+        "radix": 36,
+        #"alphabet": "0123456789",
+        "key": "2DE79D232DF5585D68CE47882AE256D6",
+        "tweak": "CBD09280979564",
+        "plaintext": "Ceciestuntestdechiffrement123cet",
+        "ciphertext": "0uaTPI9g49f9MMw54OvY8x5rmNcrhydM"
+    }
+]
+
 class TestFPE(unittest.TestCase):
 
     def test_vectors_ff1(self):
@@ -360,6 +372,15 @@ class TestFPE(unittest.TestCase):
                 results = regexp.findall(output.decode('utf-8'))[1]
                 p.wait()
                 self.assertEqual(results, testVector['ciphertext'])
+
+    def test_encrypt_extras(self):
+        regexp = re.compile('(?<=ciphertext: )[a-zA-Z0-9]+')
+        for testVector in testVectors_extras:
+            with self.subTest(testVector=testVector):
+                p = subprocess.Popen(['./example', testVector['key'], testVector['tweak'], str(testVector['radix']), testVector['plaintext']], stdin = subprocess.PIPE, stdout = subprocess.PIPE)
+                output = p.communicate()[0]
+                results = regexp.findall(output.decode('utf-8'))[1]
+                p.wait()
 
     def test_one(self):
         print('starting')

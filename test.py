@@ -303,7 +303,7 @@ testVectors_FF3_1_radix_62 = [
 
 class TestFPE(unittest.TestCase):
 
-    def xest_vectors_ff1(self):
+    def test_vectors_ff1(self):
         regexp = re.compile('(?<=ciphertext: )[a-zA-Z0-9]+')
         for index, test in enumerate(ff1):
             with self.subTest(index=index):
@@ -322,7 +322,7 @@ class TestFPE(unittest.TestCase):
                 #print(f'ciphertext: {results}')
                 self.assertEqual(results, cipher)
     
-    def xest_vectors_ff3(self):
+    def test_vectors_ff3(self):
         regexp = re.compile('(?<=ciphertext: )[a-zA-Z0-9]+')
         for index, test in enumerate(ff3):
             with self.subTest(index=index):
@@ -341,7 +341,7 @@ class TestFPE(unittest.TestCase):
                 #print(f'ciphertext: {results}')
                 self.assertEqual(results, cipher)
     
-    def xest_encrypt_acvp(self):
+    def test_encrypt_acvp(self):
         regexp = re.compile('(?<=ciphertext: )[a-zA-Z0-9]+')
         for testVector in testVectors_ACVP_AES_FF3_1:
             with self.subTest(testVector=testVector):
@@ -351,7 +351,7 @@ class TestFPE(unittest.TestCase):
                 p.wait()
                 self.assertEqual(results, testVector['ciphertext'])
 
-    def xest_encrypt_acvp_radix_62(self):
+    def test_encrypt_acvp_radix_62(self):
         regexp = re.compile('(?<=ciphertext: )[a-zA-Z0-9]+')
         for testVector in testVectors_FF3_1_radix_62:
             with self.subTest(testVector=testVector):

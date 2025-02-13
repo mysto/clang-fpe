@@ -6,10 +6,10 @@ import unittest
 # Define the FPE_KEY structure
 class FPE_KEY(ctypes.Structure):
     _fields_ = [
-        ("key_length", ctypes.c_int),
-        ("key", ctypes.c_ubyte * 32),   # 32-byte array
-        ("tweak", ctypes.c_ubyte * 16), # 16-byte array
-        ("radix", ctypes.c_uint)
+        ("tweak_length", ctypes.c_uint),
+        ("key", ctypes.c_char_p ),
+        ("radix", ctypes.c_uint),
+        ("aes_ctx", ctypes.c_void_p), 
     ]
 
 class TestFPE(unittest.TestCase):

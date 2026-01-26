@@ -10,18 +10,26 @@
   </a>
 </p>
 
+NOTE: NIST's February 2025 Draft 2 has entirely withdrawn FF3 from the NIST standard due to published vulnerabilities.
+
+This software is provided for educational and experimental use and comes with no warranty of any kind.
+It is intended for developers and researchers familiar with cryptographic standards.
+
 # FPE - Format Preserving Encryption Implementation in C
 
-An implementation of the NIST approved FF1, FF3 and FF3-1 Format Preserving Encryption (FPE) algorithms in Python.
+An implementation of the FF1, FF3, and FF3-1 format-preserving encryption algorithms in C, derived from an upstream project supporting both FF1 and FF3.
 
-This package implements the FPE algorithm for Format Preserving Encryption as described in the March 2016 NIST publication 800-38G _Methods for Format-Preserving Encryption_,
-and revised on February 28th, 2019 with a draft update for FF3-1.
+This package implements the FF3 and FF3-1 algorithms as specified in NIST Special Publication 800-38G Methods for Format-Preserving Encryption (now withdrawn), and includes the revisions on February 28th, 2019 with a draft update for FF3-1 (now withdrawn).
 
 * [NIST Recommendation SP 800-38G (FF3)](http://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-38G.pdf)
 * [NIST Recommendation SP 800-38G Revision 1 (FF3-1)](https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-38Gr1-draft.pdf)
-* [NIST SP 800-38G Revision 1(2nd Public Draft)](https://csrc.nist.gov/pubs/sp/800/38/g/r1/2pd)]
+* [NIST SP 800-38G Revision 1(2nd Public Draft)](https://csrc.nist.gov/pubs/sp/800/38/g/r1/2pd)
 
-**NOTE:** NIST's Feburary 2025 Draft 2 has removed FF3 from the NIST standard. Contact me about a licensed version of FF1 in C.
+## FF1 Support (Context)
+
+This C implementation was originally derived from an upstream project that supported both FF1 and FF3. As a result, FF1 functionality remains present in this codebase for historical, experimental, and interoperability purposes.
+
+FF1 support is not actively promoted, and FF1 implementations are outside the scope of the higher-level language bindings maintained in this project. Users should carefully evaluate patent, security, and compliance considerations before using FF1 in any context.
 
 ## Build and Run
 
@@ -130,7 +138,7 @@ void FPE_ff3_delete_key(FPE_KEY *keystruct);
 | name    | description                              |
 | ------- | ---------------------------------------- |
 | key | encryption key (128 bit, 192 bits or 256 bits), represented as a c string |
-| tweak   | tweak, represented as a c string (it must be 64 bytes) |
+| tweak   | tweak, represented as a c string (it must be 64 bits) |
 | radix    | number of characters in the given alphabet, it must be in [2, 62] |
 | returns | FPE_KEY structure                        |
 
@@ -151,3 +159,8 @@ void FPE_ff3_decrypt(char *ciphertext, char *plaintext, FPE_KEY *keystruct);
 
 1. Performance testing
 3. Custom alphabet support
+
+## License
+
+This C implementation is licensed under the [MIT license](https://mit-license.org); other language bindings may use different licenses.”
+
